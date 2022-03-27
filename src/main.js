@@ -7,7 +7,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './element.js'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css';
+import VueCookies from 'vue-cookies'
 
+Vue.use(VueCookies)
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(Antd)

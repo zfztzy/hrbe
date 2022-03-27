@@ -1,7 +1,5 @@
 <template>
   <div>
-    <a-button class="newApplicantBut" @click="editApplicant">newApplicant</a-button>
-    <a-button class="newApplicantBut" @click="log">log</a-button>
     <div v-show="isNewApplicant">
       <div class="newApplicantBackGround"></div>
       <div class="newApplicant">
@@ -63,7 +61,7 @@
         <a-button @click="editApplicant" style="float: right; margin-left: 50px; margin-top: 50px; margin-bottom: 50px;">Create</a-button>
       </div>
     </div>
-    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 300 }">
+    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 1500 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"

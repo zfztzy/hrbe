@@ -78,7 +78,6 @@ export default {
 
 
 <style>
-
 .carousel-3d-slide {
   background: none;
   border: 0px;

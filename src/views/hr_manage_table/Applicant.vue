@@ -1,67 +1,9 @@
 <template>
   <div>
-    <div v-show="isNewApplicant">
-      <div class="newApplicantBackGround"></div>
-      <div class="newApplicant">
-        <a-input v-model="userName" placeholder="姓名" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="user" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="电话" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="mobile" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="毕业院校" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="book" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="学历" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="idcard" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="专业" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="tag" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="工作年限" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="calendar" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="面试岗位" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="read" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="地域" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="environment" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="关联需求" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="database" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-button @click="close" style="float: right; margin: 50px;">Cancel</a-button>
-        <a-button @click="close" style="float: right; margin-left: 50px; margin-top: 50px; margin-bottom: 50px;">Create</a-button>
-      </div>
-    </div>
-    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 300 } ">
+    <div v-show="isNewApplicant || isBatchControl" @click="close" class="maskLayer"></div>
+    <batch-input v-show="isBatchControl" class="newApplicant"></batch-input>
+    <new-element :isNewApplicant='isNewApplicant' @close='close'></new-element>
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -105,13 +47,13 @@
               v-if="fragment.toLowerCase() === searchText.toLowerCase()"
               :key="i"
               class="highlight"
-              >{{ fragment }}</mark
+              >{{ fragment + '' }}</mark
             >
-            <template v-else>{{ fragment }}111111</template>
+            <template v-else>{{ fragment + '' }}</template>
           </template>
         </span>
         <template v-else>
-          {{ text }}
+          {{ text + '' }}
         </template>
       </template>
       <template
@@ -121,7 +63,8 @@
         'own_interviewer', 'own_interview_results', 'reason1', 'own_interview_time', 
         'machine_test_type', 'machine_test_score', 'machine_test_time', 'hw_interviewer1', 
         'hw_interview_results1', 'reason2', 'hw_interview_time1', 'hw_interviewer2', 
-        'hw_interview_results2', 'reason3', 'hw_interview_time2', 'final_result', 'final_time', 'reason4']"
+        'hw_interview_results2', 'reason3', 'hw_interview_time2', 'final_result', 'final_time', 'reason4',
+        'process_status', 'resume_status', 'sex', 'suggest_level', 'entrance', 'graduation']"
         :slot="col"
         slot-scope="text, record"
       >
@@ -133,7 +76,7 @@
             @change="e => handleChange(e.target.value, record.key, col)"
           />
           <template v-else>
-            {{ text }}
+            {{ text + '' }}
           </template>
         </div>
       </template>
@@ -154,6 +97,8 @@
   </div>
 </template>
 <script>
+import BatchInput from '@/components/batchControl/BatchInput.vue';
+import NewElement from '@/components/ApplicantCompoents/NewElement.vue';
 const columns = [
   {
     title: '姓名',
@@ -179,10 +124,70 @@ const columns = [
     },
   },
   {
+    title: '流程状态',
+    dataIndex: 'process_status',
+    width: 130,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'process_status',
+    },
+    onFilter: (value, record) =>
+      record.process_status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
+    title: '简历状态',
+    dataIndex: 'resume_status',
+    width: 130,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'resume_status',
+    },
+    onFilter: (value, record) =>
+      record.resume_status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
     title: '电话',
     dataIndex: 'phone_num',
     width: 200,
-    scopedSlots: { customRender: 'phone_num' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'phone_num',
+    },
+    onFilter: (value, record) =>
+      record.phone_num
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
   },
   {
     title: '毕业院校',
@@ -234,7 +239,47 @@ const columns = [
     title: '地域',
     dataIndex: 'region',
     width: 100,
-    scopedSlots: { customRender: 'region' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon', 
+      customRender: 'region' 
+    },
+    onFilter: (value, record) =>
+      record.region
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
+    title: '性别',
+    dataIndex: 'sex',
+    width: 100,
+    scopedSlots: { customRender: 'sex' },
+  },
+  {
+    title: '建议职级',
+    dataIndex: 'suggest_level',
+    width: 100,
+    scopedSlots: { customRender: 'suggest_level' },
+  },
+  {
+    title: '入学日期',
+    dataIndex: 'entrance',
+    width: 100,
+    scopedSlots: { customRender: 'entrance' },
+  },
+  {
+    title: '毕业日期',
+    dataIndex: 'graduation',
+    width: 100,
+    scopedSlots: { customRender: 'graduation' },
   },
   {
     title: '关联需求',
@@ -249,10 +294,26 @@ const columns = [
     scopedSlots: { customRender: 'arrival_time' },
   },
   {
-    title: '推荐人',
+    title: '招聘顾问',
     dataIndex: 'recommender',
     width: 120,
-    scopedSlots: { customRender: 'recommender' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'recommender',
+    },
+    onFilter: (value, record) =>
+      record.recommender
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '推荐时间',
@@ -273,7 +334,7 @@ const columns = [
     scopedSlots: { customRender: 'own_interview_results' },
   },
   {
-    title: '原因1',
+    title: '原因',
     dataIndex: 'reason1',
     width: 300,
     scopedSlots: { customRender: 'reason1' },
@@ -315,12 +376,6 @@ const columns = [
     scopedSlots: { customRender: 'hw_interview_results1' },
   },
   {
-    title: '原因2',
-    dataIndex: 'reason2',
-    width: 300,
-    scopedSlots: { customRender: 'reason2' },
-  },
-  {
     title: '华为技面时间',
     dataIndex: 'hw_interview_time1',
     width: 150,
@@ -337,12 +392,6 @@ const columns = [
     dataIndex: 'hw_interview_results2',
     width: 100,
     scopedSlots: { customRender: 'hw_interview_results2' },
-  },
-  {
-    title: '原因3',
-    dataIndex: 'reason3',
-    width: 300,
-    scopedSlots: { customRender: 'reason3' },
   },
   {
     title: '华为综面时间',
@@ -363,12 +412,6 @@ const columns = [
     scopedSlots: { customRender: 'final_time' },
   },
   {
-    title: '原因4',
-    dataIndex: 'reason4',
-    width: 300,
-    scopedSlots: { customRender: 'reason4' },
-  },
-  {
     title: 'operation',
     dataIndex: 'operation',
     fixed: 'right',
@@ -378,17 +421,10 @@ const columns = [
 ];
 
 const data = [];
-import * as request from "../../network/request"
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-    job: `Ed${i}`
-  });
-}
+import * as request from "@/network/request"
+
 export default {
+  components: { BatchInput, NewElement },
   data() {
     this.cacheData = data.map(item => ({ ...item }));
     return {
@@ -396,15 +432,32 @@ export default {
       columns,
       editingKey: '',
       isNewApplicant: false,
-      userName: '',
+      isBatchControl: false,
+      userName: undefined,
+      recommender: undefined,
+      region: undefined,
+      sex: undefined,
+      education: undefined,
+      entrance: undefined,
+      graduation: undefined,
+      graduated_from: undefined,
+      major: undefined,
+      phone_num: undefined,
+      job: undefined,
       searchText: '',
-      searchInput: null,
+      searchInput: undefined,
       searchedColumn: '',
     };
   },
   props: {
     newSwitch: {
-      type: Number,
+      type: Number
+    },
+    filterData: {
+      type: Object
+    },
+    BatchNum: {
+      type: Number
     }
   },
   methods: {
@@ -455,9 +508,9 @@ export default {
       this.searchedColumn = dataIndex;
     },
     log () {
-      console.log(this.searchedColumn);
-      console.log(this.searchInput);
-      console.log(this.searchText);
+      // console.log(this.searchedColumn);
+      // console.log(this.searchInput);
+      // console.log(this.searchText);
     },
     handleReset(clearFilters) {
       clearFilters();
@@ -469,6 +522,7 @@ export default {
     },
     close () {
       this.isNewApplicant = false
+      this.isBatchControl = false
     },
     updateApplicant (key) {
       request.request({
@@ -485,11 +539,11 @@ export default {
       request.request({
       url:'http://139.9.160.24/get_applicant_info/',
       method: 'post',
+      data: {filterData: this.filterData}
       }).then(res =>{
         let a = res.data.applicantList
         this.data.length = 0
         for (let i = 0; i < a.length; i++) {
-          console.log(a[i]);
           this.data.push(a[i]);
         }
         this.cacheData = data.map(item => ({ ...item }));
@@ -502,8 +556,29 @@ export default {
     this.getApplicantInfo()
   },
   watch: {
-    newSwitch:'newApplicant'
+    newSwitch:'newApplicant',
+    filterData:{
+      handler (newValue) {
+        console.log(newValue)
+        this.getApplicantInfo()
+      }
+    },
+    BatchNum: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        this.isBatchControl = true
+      }
+    },
+    cleanNum: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        this.isBatchControl = true
+      }
+    }
   }
+
 };
 </script>
 <style scoped>
@@ -511,10 +586,10 @@ export default {
   margin-right: 8px;
 }
 
-.newApplicantBackGround {
+.maskLayer {
   width: 100%;
-  height: 140%;
-  position: absolute;
+  height: 100%;
+  position: fixed;
   left: 0;
   top: 0;
   z-index: 998;
@@ -526,7 +601,7 @@ export default {
 .newApplicant {
   width: 70%;
   height: 70%;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   background-color: #fff;
@@ -538,5 +613,18 @@ export default {
 
 .newApplicantBut {
     z-index: 100;
+}
+
+.isBatchControl{
+  width: 70%;
+  height: 70%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+  z-index: 999;
+  left: 15%;
+  top: 15%;
+  border-radius: 2%
 }
 </style>

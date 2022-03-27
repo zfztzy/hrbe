@@ -1,7 +1,7 @@
 <template>
-    <div class="footer" id="bot">
-        <h2>补充说明:这里留给我接广告！！！</h2>
-    </div>
+    <a-layout-footer style="text-align: center">
+        create by cfliangf@isoftstone.com
+    </a-layout-footer>
 </template>
 
 <script>
@@ -11,9 +11,4 @@ export default {
 </script>
 
 <style>
-.footer {
-    padding: 15px;
-    text-align: center;
-    background: #ddd;
-}
 </style>

@@ -1,7 +1,5 @@
 <template>
   <div>
-    <a-button class="newApplicantBut" @click="editApplicant">newApplicant</a-button>
-    <a-button class="newApplicantBut" @click="log">log</a-button>
     <div v-show="isNewApplicant">
       <div class="newApplicantBackGround"></div>
       <div class="newApplicant">
@@ -63,7 +61,7 @@
         <a-button @click="editApplicant" style="float: right; margin-left: 50px; margin-top: 50px; margin-bottom: 50px;">Create</a-button>
       </div>
     </div>
-    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 300 }">
+    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 1500 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -182,31 +180,111 @@ const columns = [
     title: '部门',
     dataIndex: 'department',
     width: 200,
-    scopedSlots: { customRender: 'department' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'department',
+    },
+    onFilter: (value, record) =>
+      record.department
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: 'PDU',
     dataIndex: 'pdu',
     width: 250,
-    scopedSlots: { customRender: 'pdu' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'pdu',
+    },
+    onFilter: (value, record) =>
+      record.pdu
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '项目',
     dataIndex: 'project',
     width: 100,
-    scopedSlots: { customRender: 'project' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'project',
+    },
+    onFilter: (value, record) =>
+      record.project
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '岗位方向',
     dataIndex: 'position_attribute',
     width: 250,
-    scopedSlots: { customRender: 'position_attribute' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'position_attribute',
+    },
+    onFilter: (value, record) =>
+      record.position_attribute
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
-    title: '技能关键字',
-    dataIndex: 'skill_keyword',
-    width: 100,
-    scopedSlots: { customRender: 'skill_keyword' },
+    title: '地域',
+    dataIndex: 'region',
+    width: 300,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'region',
+    },
+    onFilter: (value, record) =>
+      record.region
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '岗位要求',
@@ -256,13 +334,23 @@ const columns = [
     title: '项目负责人',
     dataIndex: 'project_leader',
     width: 100,
-    scopedSlots: { customRender: 'project_leader' },
-  },
-  {
-    title: '地域',
-    dataIndex: 'region',
-    width: 300,
-    scopedSlots: { customRender: 'region' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'project_leader',
+    },
+    onFilter: (value, record) =>
+      record.project_leader
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '紧急程度',
@@ -298,7 +386,23 @@ const columns = [
     title: '状态',
     dataIndex: 'status',
     width: 100,
-    scopedSlots: { customRender: 'status' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'status',
+    },
+    onFilter: (value, record) =>
+      record.status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '关闭时间',

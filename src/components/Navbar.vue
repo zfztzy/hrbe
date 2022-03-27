@@ -1,86 +1,100 @@
 <template>
-    <div style="position: sticky; top:0; z-index: 3;">
-        <div :class='{navbar: true}'  :style="pagestyle">
-            <slot></slot>
-            <a @mouseover ='show()' @mouseleave="none()" :class="{barright:true}">二维码</a>
+    <a-layout-header class="header" style="background-color: rgba(67,126,255);">
+        <div class="ipsaLogo" style="float:left"/>
+        <div class="userInfo" style="float:right">
+            <div class="userHead"></div>
         </div>
-        <img v-show="isShow" @mouseover ='show()' @mouseleave="none()" src="../assets/Reward.jpeg" class="navbarImg" alt="">
-    </div>
+        <a-menu
+            theme="dark"
+            mode="horizontal"
+            :default-selected-keys="['2']"
+            :style="{ lineHeight: '64px' }"
+            style="background-color: rgba(67,126,255);"
+        >
+            <a-menu-item key="1" @click="showTopMenu">
+            招聘
+            </a-menu-item>
+            <a-menu-item key="2">
+            </a-menu-item>
+            <a-menu-item key="3">
+            </a-menu-item>
+        </a-menu>
+        <div class="topMenu" v-show="isShow" @mouseleave="close">
+            <a-space :size="200" style="margin-left:10%">
+                <a @click="jumpPath('Applicant')"><h5>候选人管理</h5></a>
+                <a @click="jumpPath('Recruitment')"><h5>招聘需求</h5></a>
+                <a @click="jumpPath('PojectStatus')"><h5>项目满足度</h5></a>
+                <a @click="jumpPath('ProjectInfo')"><h5>招聘看板</h5></a>
+            </a-space>
+        </div>
+    </a-layout-header>
 </template>
-
-<script>
-export default {
-    name:'Navbar',
-    props:{
-        links:Array,
-        pagestyle:{
-            type:String,
-            default:'background-color: #333333;'
-        },
+  <script>
+  export default {
+    data() {
+      return {
+        collapsed: false,
+        isShow: false
+      }
     },
-    data(){
-        return{
-            isShow:false
-        }
-    },
-    methods:{
-        show(){
-            this.isShow = true
+    methods: {
+        showTopMenu() {
+            this.isShow = true  
         },
-        none(){
+        close () {
             this.isShow = false
+        },
+        jumpPath(value){
+            this.$router.push({path:'/hrManageTable/' + value})
+            this.close()
         }
     }
-}
-</script>
-
-<style>
-/* 导航 */
-.navbar {
-    overflow: hidden;
-    background-color: #333333;
-    color: white;
-    box-shadow: 0px 1px 1px rgba(29, 29, 29, 0.088);
-}
- 
-/* 导航栏样式 */
-.navbar a {
+  };
+  </script>
+  
+  <style>
+  #components-layout-demo-top-side-2 .logo {
+    width: 120px;
+    height: 31px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 28px 16px 0;
     float: left;
-    display: block;
-    text-align: center;
-    padding: 14px 20px;
-    text-decoration: none;
-}
+  }
 
-.navbar a.barright {
-    float: right;
-    margin-right: 4%;
-}
- 
-/* 鼠标移动到链接的颜色 */
-.navbar a:hover {
-    background-color: #ddd;
-    color: black;
-    
-}
+  .topMenu{
+      background:  #e6e6e6;
+      width: 100%;
+      min-height: 200px;
+      position: absolute;
+      z-index: 1000;
+      left: 0;
+  }
 
-/* 响应式布局 - 在屏幕设备宽度尺寸小于 400px 时, 让导航栏目上下堆叠显示 */
-@media screen and (max-width: 400px) {
-    .navbar a {
-        float: none;
-        width: 100%;
-    }
-}
-
-.navbarImg{
-    position: absolute;
-    right: 0.5%;
-    height:80px;
-    width: 80px;
-    border-radius: 50%;
-    margin-right:4%;
+  .ipsaLogo {
+    width: 100px;
+    height: 40px;
+    padding: 10px 20px 10px;
+    background-image: url(https://ipsapro.isoftstone.com/portal/styles/img/logos/iPSA_Logo.png);
+    background-repeat: no-repeat;
+    background-position: 19px 0px;
+    padding: 10px 20px 10px;
+    float: left;
+    padding: 10px 20px 10px;
+    margin-left: -20px;
     margin-top: 10px;
-    transform:scale(2)
-    
+    font-size: 20px;
+    font-weight: 200;
+    color: #777777;
+  }
+
+
+.userHead {
+margin-top: 5px;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+background: yellow;
 }
-</style>
+
+  </style>
+  

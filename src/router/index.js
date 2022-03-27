@@ -18,6 +18,8 @@ const Studyhome = ()  => import('../views/study/Studyhome')
 const Studyparagraph = ()  => import('../views/study/Studyparagraph')
 const Studyleetcode = ()  => import('../views/study/Studyleetcode')
 const Studyparagraphlist = ()  => import('../views/study/Studyparagraphlist')
+const AppHome = ()  => import('../views/AppHome.vue')
+const LoginView = ()  => import('../views/LoginView.vue')
 // const Studyhome = ()  => import('../views/study/Studyhome')
 
 Vue.use(VueRouter)
@@ -25,91 +27,105 @@ Vue.use(VueRouter)
 const routes = [
   {
     path:'/',
-    name:'home',
-    component: HrManageTable,
-    redirect:'/hrManageTable/allProfile',
-  },
-  {
-    path: '/hrManageTable',
-    name: 'HrManageTable',
-    component: HrManageTable,
+    name:'appHome',
+    component: AppHome,
     redirect:'/hrManageTable/allProfile',
     children: [
       {
-        path: 'allprofile',
-        name: 'Allprofile',
-        component: Allprofile
+        path:'/hrManageTable',
+        name:'home',
+        component: HrManageTable,
+        redirect:'/hrManageTable/allProfile',
       },
       {
-        path: 'applicant',
-        name: 'Applicant',
-        component: Applicant,
+        path: '/hrManageTable',
+        name: 'HrManageTable',
+        component: HrManageTable,
+        redirect:'/hrManageTable/allProfile',
+        children: [
+          {
+            path: 'allprofile',
+            name: 'Allprofile',
+            component: Allprofile
+          },
+          {
+            path: 'applicant',
+            name: 'Applicant',
+            component: Applicant,
+          },
+          {
+            path: 'recruitment',
+            name: 'Recruitment',
+            component: Recruitment,
+          },
+          {
+            path: 'pojectStatus',
+            name: 'PojectStatus',
+            component: PojectStatus,
+          },
+          {
+            path: 'projectInfo',
+            name: 'ProjectInfo',
+            component: ProjectInfo,
+          }
+        ]
       },
       {
-        path: 'recruitment',
-        name: 'Recruitment',
-        component: Recruitment,
+        path: '/clockIn',
+        name: 'ClockIn',
+        component: ClockIn
       },
       {
-        path: 'pojectStatus',
-        name: 'PojectStatus',
-        component: PojectStatus,
+        path: '/diary',
+        name: 'Diary',
+        component: Diary
       },
       {
-        path: 'projectInfo',
-        name: 'ProjectInfo',
-        component: ProjectInfo,
-      }
+        path: '/difficulty',
+        name: 'Difficulty',
+        component: Difficulty
+      },
+      {
+        path: '/qa',
+        name: 'Qa',
+        component: Qa
+      },
+      {
+        path: '/study',
+        name: 'Study',
+        component: Study,
+        redirect:'/study/home',
+        children:[
+          {
+            path: 'home',
+            name: 'StudyHome',
+            component: Studyhome,
+          },
+          {
+            path: '/study/content',
+            name: 'Studyparagraph',
+            component: Studyparagraph,
+          },
+          {
+            path: 'leetcode',
+            name: 'Studyleetcode',
+            component: Studyleetcode,
+          },
+          {
+            path: '/study/list',
+            name: 'Studyparagraphlist',
+            component: Studyparagraphlist,
+          },
+        ]
+      },
+      
     ]
   },
   {
-    path: '/clockIn',
-    name: 'ClockIn',
-    component: ClockIn
-  },
-  {
-    path: '/diary',
-    name: 'Diary',
-    component: Diary
-  },
-  {
-    path: '/difficulty',
-    name: 'Difficulty',
-    component: Difficulty
-  },
-  {
-    path: '/qa',
-    name: 'Qa',
-    component: Qa
-  },
-  {
-    path: '/study',
-    name: 'Study',
-    component: Study,
-    redirect:'/study/home',
-    children:[
-      {
-        path: 'home',
-        name: 'StudyHome',
-        component: Studyhome,
-      },
-      {
-        path: '/study/content',
-        name: 'Studyparagraph',
-        component: Studyparagraph,
-      },
-      {
-        path: 'leetcode',
-        name: 'Studyleetcode',
-        component: Studyleetcode,
-      },
-      {
-        path: '/study/list',
-        name: 'Studyparagraphlist',
-        component: Studyparagraphlist,
-      },
-    ]
-  },
+    path: '/login',
+    name: 'LoginView',
+    component: LoginView
+  }
 ]
 
 const router = new VueRouter({

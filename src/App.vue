@@ -1,40 +1,58 @@
 <template>
-  <div id="app">
-    <Menu/>
-    <Topbanner/>
+  <a-layout style="height: 100%">
     <router-view/>
     <Foot/>
-  </div>
+  </a-layout>
 </template>
 
 <script>
 // @ is an alias to /src
 
-import Menu from '@/components/Menu'
-import Topbanner from '@/components/banner/Topbanner'
+// import Topbanner from '@/components/banner/Topbanner'
 import Foot from '@/components/Foot'
 // import Topbannerwinter from './components/Topbannerwinter.vue'
+import * as request from "@/network/request"
 
 
 export default {
-  name: 'Home',
+  name: 'appHome',
   components: {
-    Menu,
-    Topbanner,
     Foot,
     // Topbannerwinter,
+  },
+  methods: {
+    checkLogin () {
+      request.request({
+        url:'http://139.9.160.24/login/',
+        method: 'post',
+        data: {
+          userInfo: {
+            user_name: this.$cookies.get("userName"),
+            password: this.$cookies.get("password")
+          }
+        }
+      }).then(res =>{
+        if (res.data.msg == 'pass'){
+          console.log();
+        } else {
+          alert(res.data.msg)
+          this.$router.push('/Login')
+        }
+      }).catch(err =>{
+        console.log(err);
+      })
+    }
+  },
+  created () {
+    this.checkLogin()
   }
 }
 
 </script>
 
 <style>
-#app {
-  /* font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
-  text-align: left;
-  /* color: #2c3e50; */
+body {
+  margin: 0;
+  padding: 0;
 }
-
 </style>
