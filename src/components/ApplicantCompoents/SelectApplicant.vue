@@ -1,172 +1,265 @@
 <template>
     <div v-show="isSelectApplicant">
-      <div class="newApplicant">
-        <a-input v-model="userName" placeholder="姓名" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="user" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="recommender" placeholder="招聘顾问" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="user" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="phone_num" placeholder="电话" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="mobile" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="graduated_from" placeholder="毕业院校" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="book" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="education" placeholder="学历" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="idcard" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="major" placeholder="专业" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="tag" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="entrance" placeholder="入学时间" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="calendar" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="graduation" placeholder="毕业时间" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="calendar" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="job" placeholder="面试岗位" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="read" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="region" placeholder="地域" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="environment" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="sex" placeholder="性别" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="man" />
-          <a-icon slot="prefix" type="woman" style="margin-left: -24px;"/>
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-button @click="close" style="float: right; margin: 50px;">Cancel</a-button>
-        <a-button @click="createNewApplicant" style="float: right; margin-left: 50px; margin-top: 50px; margin-bottom: 50px;">Create</a-button>
+      <div class="selectApplicant">
+        <el-scrollbar style="height:100%">
+            <a-row :gutter="16"  style="margin: 20px" >
+                <a-col :span="4">
+                    <a-statistic v-if='model.name' title="姓名" :value="model.name" style="margin-right: 50px"/>
+                    <a-statistic v-else title="姓名" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.process_status' title="流程状态" :value="model.process_status" class="demo-class"/>
+                    <a-statistic v-else title="流程状态" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.resume_status' title="简历状态" :value="model.resume_status" class="demo-class"/>
+                    <a-statistic v-else title="简历状态" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="8">
+                    <a-statistic title="电话" :value="model.phone_num" groupSeparator="" class="demo-class"/>
+                </a-col>
+                <!-- <a-col :span="4">
+                    <a-statistic title="姓名" :value="model.name" style="margin-right: 50px"/>
+                </a-col> -->
+                <a-col :span="4">
+                    <a-statistic v-if='model.graduated_from' title="毕业院校" :value="model.graduated_from" class="demo-class"/>
+                    <a-statistic v-else title="毕业院校" value="---" class="demo-class"/>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16"  style="margin: 20px" >
+                <a-col :span="4">
+                    <a-statistic v-if='model.education' title="学历" :value="model.education" class="demo-class"/>
+                    <a-statistic v-else title="学历" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.major' title="专业" :value="model.major" class="demo-class"/>
+                    <a-statistic v-else title="专业" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.working_seniority' title="工作年限" :value="model.working_seniority" class="demo-class"/>
+                    <a-statistic v-else title="工作年限" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.job' title="面试岗位" :value="model.job" class="demo-class"/>
+                    <a-statistic v-else title="面试岗位" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.region' title="地域" :value="model.region" class="demo-class"/>
+                    <a-statistic v-else title="地域" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.sex' title="性别" :value="model.sex" class="demo-class"/>
+                    <a-statistic v-else title="性别" value="---" class="demo-class"/>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16"  style="margin: 20px" >
+                <a-col :span="4">
+                    <a-statistic v-if='model.suggest_level' title="建议职级" :value="model.suggest_level" class="demo-class"/>
+                    <a-statistic v-else title="建议职级" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.entrance' title="入学日期" :value="model.entrance" class="demo-class"/>
+                    <a-statistic v-else title="入学日期" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.graduation' title="毕业日期" :value="model.graduation" class="demo-class"/>
+                    <a-statistic v-else title="毕业日期" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.related' title="关联需求" :value="model.related" class="demo-class"/>
+                    <a-statistic v-else title="关联需求" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.arrival_time' title="能够到岗时间" :value="model.arrival_time" class="demo-class"/>
+                    <a-statistic v-else title="能够到岗时间" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.recommender' title="招聘顾问" :value="model.recommender" class="demo-class"/>
+                    <a-statistic v-else title="招聘顾问" value="---" class="demo-class"/>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16"  style="margin: 20px" >
+                <a-col :span="4">
+                    <a-statistic v-if='model.recommend_time' title="推荐时间" :value="model.recommend_time" class="demo-class"/>
+                    <a-statistic v-else title="推荐时间" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.own_interviewer' title="软通面试人" :value="model.own_interviewer" class="demo-class"/>
+                    <a-statistic v-else title="软通面试人" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.own_interview_results' title="软通面试结果" :value="model.own_interview_results" class="demo-class"/>
+                    <a-statistic v-else title="软通面试结果" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.reason1' title="原因" :value="model.reason1" class="demo-class"/>
+                    <a-statistic v-else title="原因" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.own_interview_time' title="软通面试时间" :value="model.own_interview_time" class="demo-class"/>
+                    <a-statistic v-else title="软通面试时间" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.machine_test_type' title="软通机试类型" :value="model.machine_test_type" class="demo-class"/>
+                    <a-statistic v-else title="软通机试类型" value="---" class="demo-class"/>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16"  style="margin: 20px" >
+                <a-col :span="4">
+                    <a-statistic v-if='model.machine_test_score' title="机试成绩" :value="model.machine_test_score" class="demo-class"/>
+                    <a-statistic v-else title="机试成绩" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.machine_test_time' title="机试时间" :value="model.machine_test_time" class="demo-class"/>
+                    <a-statistic v-else title="机试时间" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.hw_interviewer1' title="华为技面人" :value="model.hw_interviewer1" class="demo-class"/>
+                    <a-statistic v-else title="华为技面人" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.hw_interview_results1' title="华为技面结果" :value="model.hw_interview_results1" class="demo-class"/>
+                    <a-statistic v-else title="华为技面结果" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.hw_interview_time1' title="华为技面时间" :value="model.hw_interview_time1" class="demo-class"/>
+                    <a-statistic v-else title="华为技面时间" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.hw_interviewer2' title="华为综面人" :value="model.hw_interviewer2" class="demo-class"/>
+                    <a-statistic v-else title="华为综面人" value="---" class="demo-class"/>
+                </a-col>
+            </a-row>
+            <a-row :gutter="16"  style="margin: 20px" >
+                <a-col :span="4">
+                    <a-statistic v-if='model.hw_interview_results2' title="华为综面结果" :value="model.hw_interview_results2" class="demo-class"/>
+                    <a-statistic v-else title="华为综面结果" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.hw_interview_time2' title="华为综面时间" :value="model.hw_interview_time2" class="demo-class"/>
+                    <a-statistic v-else title="华为综面时间" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.final_result' title="入项结果" :value="model.final_result" class="demo-class"/>
+                    <a-statistic v-else title="入项结果" value="---" class="demo-class"/>
+                </a-col>
+                <a-col :span="4">
+                    <a-statistic v-if='model.final_time' title="入项时间" :value="model.final_time" class="demo-class"/>
+                    <a-statistic v-else title="入项时间" value="---" class="demo-class"/>
+                </a-col>
+            </a-row>
+        </el-scrollbar>
+        <a-button @click="close" class="cancelButtom">关闭</a-button>
       </div>
     </div>
 </template>
 
 <script>
-import * as request from "@/network/request"
+import moment from 'moment';
+function typeOf(obj) {
+  const toString = Object.prototype.toString;
+  const map = {
+    '[object Boolean]'  : 'boolean',
+    '[object Number]'   : 'number',
+    '[object String]'   : 'string',
+    '[object Function]' : 'function',
+    '[object Array]'    : 'array',
+    '[object Date]'     : 'date',
+    '[object RegExp]'   : 'regExp',
+    '[object Undefined]': 'undefined',
+    '[object Null]'     : 'null',
+    '[object Object]'   : 'object'
+  };
+  return map[toString.call(obj)];
+}
+function deepCopy(data) {
+  const t = typeOf(data);
+  let o;
+
+  if (t === 'array') {
+    o = [];
+  } else if ( t === 'object') {
+    o = {};
+  } else {
+    return data;
+  }
+
+  if (t === 'array') {
+    for (let i = 0; i < data.length; i++) {
+      o.push(deepCopy(data[i]));
+    }
+  } else if ( t === 'object') {
+    for (let i in data) {
+      o[i] = deepCopy(data[i]);
+    }
+  }
+  return o;
+}
+
 export default {
     props: {
         isSelectApplicant: {
             type: Boolean,
             default: false
         },
-        id: {
-            type: String
+        Applicant: {
+            type: Object
         }
     },
     data() {
         return {
-        userName: undefined,
-        recommender: undefined,
-        region: undefined,
-        sex: undefined,
-        education: undefined,
-        entrance: undefined,
-        graduation: undefined,
-        graduated_from: undefined,
-        major: undefined,
-        phone_num: undefined,
-        job: undefined
+            None: '+86',
+            model: {}
         };
     },
     methods: {
         close () {
             this.$emit('close')
         },
-        createNewApplicant () {
-            if (this.userName !== undefined && this.recommender !== undefined && this.region !== undefined 
-            && this.sex !== undefined && this.education !== undefined && this.entrance !== undefined 
-            && this.graduation !== undefined && this.graduated_from !== undefined && this.major !== undefined 
-            && this.phone_num !== undefined && this.job !== undefined){
-                request.request({
-                url:'http://139.9.160.24/create_applicant_info/',
-                method: 'post',
-                data: {
-                data: {
-                    name: this.userName,
-                    recommender: this.recommender,
-                    region: this.region,
-                    sex: this.sex,
-                    education: this.education,
-                    entrance: this.entrance,
-                    graduation: this.graduation,
-                    graduated_from: this.graduated_from,
-                    major: this.major,
-                    phone_num: this.phone_num,
-                    job: this.job,
-                }
-                }
-                }).then(res =>{
-                console.log(res)
-                alert(res.data.msg)
-                this.userName = undefined
-                this.recommender = undefined
-                this.region = undefined
-                this.sex = undefined
-                this.education = undefined
-                this.entrance = undefined
-                this.graduation = undefined
-                this.graduated_from = undefined
-                this.major = undefined
-                this.phone_num = undefined
-                this.job = undefined
-                this.close()
-                }).catch(err =>{
-                console.log(err);
-                alert(err)
-                this.close()
-                })
-            } else {
-                alert('必选项没填完')
+        formatDate (date) {
+            if (date) {
+                date = moment(date).format('YYYY-MM-DD')
+                console.log(date); 
+                return date
+            }
+        },
+        formatDateTime (date) {
+            if (date) {
+                date = moment(date).format('YYYY-MM-DD HH:MM:ss')
+                return date
             }
         }
+    },
+    mounted () {
+        this.model = deepCopy(this.Applicant)
+        this.model.hw_interview_time2 = this.formatDateTime(this.model.hw_interview_time2)
+        this.model.hw_interview_time1 = this.formatDateTime(this.model.hw_interview_time1)
+        this.model.machine_test_time = this.formatDateTime(this.model.machine_test_time)
+        this.model.own_interview_time = this.formatDateTime(this.model.own_interview_time)
+        this.model.recommend_time = this.formatDate(this.model.recommend_time)
+        this.model.arrival_time = this.formatDate(this.model.arrival_time)
+        this.model.final_time = this.formatDate(this.model.final_time)
+        this.model.entrance = this.formatDate(this.model.entrance)
+        this.model.graduation = this.formatDate(this.model.graduation)
     }
 }
 </script>
 
 <style>
-.newApplicant {
-  width: 70%;
-  height: 70%;
+.selectApplicant {
+  width: 98%;
+  height: 90%;
   position: fixed;
-  left: 0;
-  top: 0;
   background-color: #fff;
   z-index: 999;
-  left: 15%;
-  top: 15%;
+  left: 1%;
+  top: 5%;
   border-radius: 2%
+}
+
+.cancelButtom {
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
 }
 </style>

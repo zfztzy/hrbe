@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div v-show="isNewApplicant || isBatchControl" @click="close" class="maskLayer"></div>
-    <batch-input v-show="isBatchControl" class="newApplicant"></batch-input>
-    <new-element :isNewApplicant='isNewApplicant' @close='close'></new-element>
+    <div v-show="isNewApplicant || isBatchControl || isSelectApplicant || isSelectRelatedId || isBatchControl2" @click="close" class="maskLayer"></div>
+    <batch-input batchType='ApplicantInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
+    <batch-output batchType='ApplicantInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
+    <new-element :isNewApplicant='isNewApplicant' @close='close2'></new-element>
+    <select-applicant v-if="model!=''" :Applicant='model' :isSelectApplicant='isSelectApplicant' @close='close'></select-applicant>
+    <select-recruitment v-if="recruitmentModel!=''" :model='recruitmentModel' :isSelectRelatedId='isSelectRelatedId' @close='close' @confirm='relatedConfirm'></select-recruitment>
     <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
       <div
         slot="filterDropdown"
@@ -53,30 +56,116 @@
           </template>
         </span>
         <template v-else>
-          {{ text + '' }}
+          {{ text }}
         </template>
       </template>
       <template
         v-for="col in ['name', 'phone_num', 'graduated_from', 'education', 
         'major', 'working_seniority', 'job', 'region', 
-        'related', 'arrival_time', 'recommender', 'recommend_time', 
+        'related', 'pdu', 'project_name', 'arrival_time', 'recommender', 'recommend_time', 
         'own_interviewer', 'own_interview_results', 'reason1', 'own_interview_time', 
         'machine_test_type', 'machine_test_score', 'machine_test_time', 'hw_interviewer1', 
         'hw_interview_results1', 'reason2', 'hw_interview_time1', 'hw_interviewer2', 
         'hw_interview_results2', 'reason3', 'hw_interview_time2', 'final_result', 'final_time', 'reason4',
-        'process_status', 'resume_status', 'sex', 'suggest_level', 'entrance', 'graduation']"
+        'process_status', 'resume_status', 'sex', 'suggest_level', 'giveup_time', 'entrance', 'graduation']"
         :slot="col"
         slot-scope="text, record"
       >
         <div :key="col">
-          <a-input
-            v-if="record.editable"
-            style="margin: -5px 0"
-            :value="text"
-            @change="e => handleChange(e.target.value, record.key, col)"
-          />
+          <template v-if="record.editable">
+            <a-date-picker
+              show-time
+              v-if="col=='machine_test_time'" 
+              placeholder="机试时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
+              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
+            <a-date-picker
+              show-time
+              v-else-if="col=='hw_interview_time1'" 
+              placeholder="华为技面时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
+              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
+            <a-date-picker
+              show-time
+              v-else-if="col=='recommend_time'" 
+              placeholder="推荐时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
+              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
+            <a-date-picker
+              show-time
+              v-else-if="col=='hw_interview_time2'" 
+              placeholder="华为综面时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
+              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
+            <a-date-picker
+              show-time
+              v-else-if="col=='own_interview_time'" 
+              placeholder="软通面试时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
+              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
+            <a-date-picker 
+              v-else-if="col=='arrival_time'" 
+              placeholder="能够到岗时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            <a-date-picker 
+              v-else-if="col=='entrance'" 
+              placeholder="入学日期"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            <a-date-picker 
+              v-else-if="col=='graduation'" 
+              placeholder="毕业日期"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            <a-date-picker 
+              v-else-if="col=='final_time'" 
+              placeholder="入项时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            <a-date-picker 
+              v-else-if="col=='giveup_time'" 
+              placeholder="放弃offer时间"
+              style="margin: -5px 0"
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            <a-input
+              v-else-if="col=='related'" 
+              placeholder="关联需求"
+              style="margin: -5px 0"
+              :value="text"
+              @click="selectRelated(record.key)"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+            <a-input
+              v-else
+              style="margin: -5px 0"
+              :value="text"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+          </template>
           <template v-else>
-            {{ text + '' }}
+            <template v-if="col=='name'">
+              <a @click="selectId(record)">{{ text }}</a>
+            </template>
+            <!-- <template v-else-if="col=='related'">
+              <a @click="selectId(record)">{{ text }}</a>
+            </template> -->
+            <template v-else>
+              <template v-if="col=='machine_test_time'||col=='hw_interview_time1'||col=='recommend_time'||col=='hw_interview_time2'||col=='own_interview_time'">
+                {{ text | datetime}}
+              </template>
+              <template v-else-if="col=='giveup_time'||col=='final_time'||col=='graduation'||col=='entrance'||col=='arrival_time'">
+                {{ text | date}}
+              </template>
+              <template v-else>
+                {{ text }}
+              </template>
+            </template>
           </template>
         </div>
       </template>
@@ -98,6 +187,7 @@
 </template>
 <script>
 import BatchInput from '@/components/batchControl/BatchInput.vue';
+import BatchOutput from '@/components/batchControl/BatchOutput.vue';
 import NewElement from '@/components/ApplicantCompoents/NewElement.vue';
 const columns = [
   {
@@ -272,13 +362,13 @@ const columns = [
   {
     title: '入学日期',
     dataIndex: 'entrance',
-    width: 100,
+    width: 130,
     scopedSlots: { customRender: 'entrance' },
   },
   {
     title: '毕业日期',
     dataIndex: 'graduation',
-    width: 100,
+    width: 130,
     scopedSlots: { customRender: 'graduation' },
   },
   {
@@ -288,9 +378,21 @@ const columns = [
     scopedSlots: { customRender: 'related' },
   },
   {
+    title: 'PDU',
+    dataIndex: 'pdu',
+    width: 100,
+    scopedSlots: { customRender: 'pdu' },
+  },
+  {
+    title: '项目名称',
+    dataIndex: 'project_name',
+    width: 250,
+    scopedSlots: { customRender: 'project_name' },
+  },
+  {
     title: '能够到岗时间',
     dataIndex: 'arrival_time',
-    width: 150,
+    width: 250,
     scopedSlots: { customRender: 'arrival_time' },
   },
   {
@@ -318,7 +420,7 @@ const columns = [
   {
     title: '推荐时间',
     dataIndex: 'recommend_time',
-    width: 150,
+    width: 250,
     scopedSlots: { customRender: 'recommend_time' },
   },
   {
@@ -342,7 +444,7 @@ const columns = [
   {
     title: '软通面试时间',
     dataIndex: 'own_interview_time',
-    width: 150,
+    width: 240,
     scopedSlots: { customRender: 'own_interview_time' },
   },
   {
@@ -360,7 +462,7 @@ const columns = [
   {
     title: '机试时间',
     dataIndex: 'machine_test_time',
-    width: 150,
+    width: 240,
     scopedSlots: { customRender: 'machine_test_time' },
   },
   {
@@ -370,7 +472,7 @@ const columns = [
     scopedSlots: { customRender: 'hw_interviewer1' },
   },
   {
-    title: '华为计面结果',
+    title: '华为技面结果',
     dataIndex: 'hw_interview_results1',
     width: 100,
     scopedSlots: { customRender: 'hw_interview_results1' },
@@ -378,7 +480,7 @@ const columns = [
   {
     title: '华为技面时间',
     dataIndex: 'hw_interview_time1',
-    width: 150,
+    width: 240,
     scopedSlots: { customRender: 'hw_interview_time1' },
   },
   {
@@ -396,8 +498,14 @@ const columns = [
   {
     title: '华为综面时间',
     dataIndex: 'hw_interview_time2',
-    width: 150,
+    width: 240,
     scopedSlots: { customRender: 'hw_interview_time2' },
+  },
+  {
+    title: '放弃offer时间',
+    dataIndex: 'giveup_time',
+    width: 240,
+    scopedSlots: { customRender: 'giveup_time' },
   },
   {
     title: '入项结果',
@@ -408,7 +516,7 @@ const columns = [
   {
     title: '入项时间',
     dataIndex: 'final_time',
-    width: 150,
+    width: 240,
     scopedSlots: { customRender: 'final_time' },
   },
   {
@@ -416,15 +524,18 @@ const columns = [
     dataIndex: 'operation',
     fixed: 'right',
     scopedSlots: { customRender: 'operation' },
-    width: 130,
+    width: 180,
   },
 ];
 
 const data = [];
 import * as request from "@/network/request"
+import SelectApplicant from '../../components/ApplicantCompoents/SelectApplicant.vue';
+import SelectRecruitment from '../../components/ApplicantCompoents/SelectRecruitment.vue';
+import moment from 'moment';
 
 export default {
-  components: { BatchInput, NewElement },
+  components: { BatchInput, NewElement, SelectApplicant, SelectRecruitment, BatchOutput },
   data() {
     this.cacheData = data.map(item => ({ ...item }));
     return {
@@ -433,6 +544,7 @@ export default {
       editingKey: '',
       isNewApplicant: false,
       isBatchControl: false,
+      isBatchControl2: false,
       userName: undefined,
       recommender: undefined,
       region: undefined,
@@ -447,6 +559,10 @@ export default {
       searchText: '',
       searchInput: undefined,
       searchedColumn: '',
+      isSelectApplicant: false,
+      model: '',
+      isSelectRelatedId: false,
+      recruitmentModel: ''
     };
   },
   props: {
@@ -458,7 +574,7 @@ export default {
     },
     BatchNum: {
       type: Number
-    }
+    },
   },
   methods: {
     handleChange(value, key, column) {
@@ -523,8 +639,22 @@ export default {
     close () {
       this.isNewApplicant = false
       this.isBatchControl = false
+      this.isBatchControl2 = false
+      this.isSelectApplicant = false
+      this.isSelectRelatedId = false
+    },
+    close2 () {
+      this.isNewApplicant = false
+      this.isBatchControl = false
+      this.isBatchControl2 = false
+      this.isSelectApplicant = false
+      this.isSelectRelatedId = false
+      this.getApplicantInfo()
     },
     updateApplicant (key) {
+      console.log(this.data)
+      console.log(key);
+      console.log(this.data[key]);
       request.request({
       url:'http://139.9.160.24/update_applicant_info/',
       method: 'post',
@@ -550,6 +680,24 @@ export default {
       }).catch(err =>{
         console.log(err);
       })
+    },
+    selectId (model) {
+      console.log(model)
+      this.model = model
+      this.isSelectApplicant = true
+    },
+    selectRelated (key) {
+      console.log(key)
+      this.recruitmentModel = this.data[key]
+      console.log(this.recruitmentModel)
+      this.isSelectRelatedId = true
+    },
+    relatedConfirm (childValue) {
+      this.close()
+      const key = childValue.key
+      this.handleChange(childValue.related, key, 'related')
+      this.handleChange(childValue.pdu, key, 'pdu')
+      this.handleChange(childValue.project_name, key, 'project_name')
     }
   },
   created () {
@@ -567,7 +715,12 @@ export default {
       handler: function (newValue, oldValue) {
         console.log(newValue)
         console.log(oldValue)
-        this.isBatchControl = true
+        if (newValue > oldValue){
+          this.isBatchControl = true
+        }
+        if (oldValue > newValue){
+          this.isBatchControl2 = true
+        }
       }
     },
     cleanNum: {
@@ -576,6 +729,14 @@ export default {
         console.log(oldValue)
         this.isBatchControl = true
       }
+    }
+  },
+  filters: {
+    datetime(text) {
+      return moment(text).format('YYYY-MM-DD HH:MM:ss') 
+    },
+    date(text) {
+      return moment(text).format('YYYY-MM-DD') 
     }
   }
 

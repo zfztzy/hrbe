@@ -1,67 +1,12 @@
 <template>
   <div>
-    <div v-show="isNewApplicant">
-      <div class="newApplicantBackGround"></div>
-      <div class="newApplicant">
-        <a-input v-model="userName" placeholder="姓名" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="user" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="电话" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="mobile" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="毕业院校" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="book" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="学历" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="idcard" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="专业" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="tag" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="工作年限" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="calendar" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="面试岗位" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="read" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="地域" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="environment" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="关联需求" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="database" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-button @click="editApplicant" style="float: right; margin: 50px;">Cancel</a-button>
-        <a-button @click="editApplicant" style="float: right; margin-left: 50px; margin-top: 50px; margin-bottom: 50px;">Create</a-button>
-      </div>
-    </div>
-    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 1500 }">
+    <div v-show="isBatchControl || isBatchControl2 || isSelectRelatedId || isHtml5Editor || isNewRecruitment" @click="close" class="maskLayer"></div>
+    <html-5-editor @confirm='updateRequirements' :editType="editing" :model="model" v-show="isHtml5Editor" @close='close' class="newApplicant"></html-5-editor>
+    <new-recruitment  :isNewRecruitment='isNewRecruitment' @close='close2'></new-recruitment>
+    <batch-input batchType='RecruitmentInfo' v-show="isBatchControl" @close='close' class="newApplicant"></batch-input>
+    <batch-output batchType='RecruitmentInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
+    <select-project-info v-if="recruitmentModel!=''" :model='recruitmentModel' :isSelectRelatedId='isSelectRelatedId' @close='close' @confirm='relatedConfirm'></select-project-info>
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -107,7 +52,7 @@
               class="highlight"
               >{{ fragment }}</mark
             >
-            <template v-else>{{ fragment }}111111</template>
+            <template v-else>{{ fragment }}</template>
           </template>
         </span>
         <template v-else>
@@ -125,14 +70,46 @@
         slot-scope="text, record"
       >
         <div :key="col">
-          <a-input
-            v-if="record.editable"
-            style="margin: -5px 0"
-            :value="text"
-            @change="e => handleChange(e.target.value, record.key, col)"
-          />
+          <template v-if="record.editable">
+            <a-input
+              v-if="col=='project'" 
+              placeholder="项目"
+              style="margin: -5px 0"
+              :value="text"
+              @click="selectProject(record.key)"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+            <template v-else-if="col=='requirements'" >
+              <a rel="noopener noreferrer" @click="startEditor(record.key, true)" style="
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;">查看</a>
+            </template>
+            <template v-else-if="col=='proposed_time'" >
+              {{ text | datetime}}
+            </template>
+            <a-input
+              v-else
+              style="margin: -5px 0"
+              :value="text"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+          </template>
           <template v-else>
-            {{ text }}
+            <template v-if="col=='requirements'" >
+              <a rel="noopener noreferrer" @click="startEditor(record.key, false)" style="
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              overflow: hidden;">查看</a>
+            </template>
+            <template v-else-if="col=='proposed_time'" >
+              {{ text | datetime}}
+            </template>
+            <template v-else>
+              {{ text }}
+            </template>
           </template>
         </div>
       </template>
@@ -153,33 +130,14 @@
   </div>
 </template>
 <script>
+import BatchInput from '@/components/batchControl/BatchInput.vue';
+import BatchOutput from '@/components/batchControl/BatchOutput.vue';
 const columns = [
-  {
-    title: '需求ID',
-    dataIndex: 'internal_id',
-    width: 100,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'internal_id',
-    },
-    onFilter: (value, record) =>
-      record.internal_id
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
-  },
   {
     title: '部门',
     dataIndex: 'department',
-    width: 200,
+    width: 130,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -202,6 +160,7 @@ const columns = [
     title: 'PDU',
     dataIndex: 'pdu',
     width: 250,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -223,7 +182,8 @@ const columns = [
   {
     title: '项目',
     dataIndex: 'project',
-    width: 100,
+    width: 200,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -262,6 +222,14 @@ const columns = [
           this.searchInput.focus();
         }, 0);
       }
+    }
+  },
+  {
+    title: '关键字段',
+    dataIndex: 'skill_keyword',
+    width: 200,
+    scopedSlots: {
+      customRender: 'skill_keyword' 
     }
   },
   {
@@ -426,7 +394,11 @@ const columns = [
 ];
 
 const data = [];
-import * as request from "../../network/request"
+import * as request from "@/network/request"
+import SelectProjectInfo from '@/components/recruitmentCompoment/SelectProjectInfo.vue';
+import Html5Editor from '@/components/Html5Editor.vue';
+import NewRecruitment from '@/components/recruitmentCompoment/NewRecruitment.vue';
+import moment from 'moment';
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -437,6 +409,15 @@ for (let i = 0; i < 100; i++) {
   });
 }
 export default {
+  components: { BatchInput, BatchOutput, SelectProjectInfo, Html5Editor, NewRecruitment },
+  props: {
+    BatchNum: {
+      type: Number
+    },
+    newSwitch: {
+      type: Number
+    },
+  },
   data() {
     this.cacheData = data.map(item => ({ ...item }));
     return {
@@ -448,6 +429,14 @@ export default {
       searchText: '',
       searchInput: null,
       searchedColumn: '',
+      isBatchControl: false,
+      isBatchControl2: false,
+      isSelectRelatedId: false,
+      recruitmentModel: {},
+      isHtml5Editor: false,
+      isNewRecruitment: false,
+      model: {},
+      editing: false
     };
   },
   methods: {
@@ -528,35 +517,95 @@ export default {
         let a = res.data.infoList
         this.data.length = 0
         for (let i = 0; i < a.length; i++) {
-          console.log(a[i]);
           this.data.push(a[i]);
         }
         this.cacheData = data.map(item => ({ ...item }));
       }).catch(err =>{
         console.log(err);
       })
+    },
+    close () {
+      this.isBatchControl = false
+      this.isBatchControl2 = false
+      this.isSelectRelatedId = false
+      this.isHtml5Editor = false
+      this.isNewRecruitment = false
+    },
+    close2 () {
+      this.isBatchControl = false
+      this.isBatchControl2 = false
+      this.isSelectRelatedId = false
+      this.isHtml5Editor = false
+      this.isNewRecruitment = false
+      this.getRecruitmentInfo()
+    },
+    relatedConfirm (childValue) {
+      this.close()
+      const key = childValue.key
+      this.handleChange(childValue.department, key, 'department')
+      this.handleChange(childValue.pdu, key, 'pdu')
+      this.handleChange(childValue.project_name, key, 'project')
+    },
+    selectProject (key) {
+      console.log(key)
+      this.recruitmentModel = this.data[key]
+      console.log(this.recruitmentModel)
+      this.isSelectRelatedId = true
+    },
+    startEditor (key, editing) {
+      this.editing = editing
+      this.isHtml5Editor = true
+      this.model = this.data[key]
+    },
+    updateRequirements (childValue) {
+      console.log(childValue);
+      const key = childValue.model.key
+      this.data[key].requirements = childValue.value
+      this.updateRecruitmentInfo(key)
     }
   },
   created () {
     this.getRecruitmentInfo()
+  },
+  watch: {
+    BatchNum: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        if (newValue > oldValue){
+          this.isBatchControl = true
+        }
+        if (oldValue > newValue){
+          this.isBatchControl2 = true
+        }
+      }
+    },
+    cleanNum: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        this.isBatchControl = true
+      }
+    },
+    newSwitch:{
+      handler () {
+        this.isNewRecruitment = true
+      }
+    },
+  },
+  filters: {
+    datetime(text) {
+      return moment(text).format('YYYY-MM-DD HH:MM:ss') 
+    },
+    date(text) {
+      return moment(text).format('YYYY-MM-DD') 
+    }
   }
 };
 </script>
 <style scoped>
 .editable-row-operations a {
   margin-right: 8px;
-}
-
-.newApplicantBackGround {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 998;
-  background:rgba(0, 0, 0, 0.4);
-  filter:alpha(opacity=60);  /*设置透明度为60%*/
-  opacity:0.6;  /*非IE浏览器下设置透明度为60%*/
 }
 
 .newApplicant {
@@ -574,5 +623,17 @@ export default {
 
 .newApplicantBut {
     z-index: 100;
+}
+
+.maskLayer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 108;
+  background:rgba(0, 0, 0, 0.4);
+  filter:alpha(opacity=60);  /*设置透明度为60%*/
+  opacity:0.6;  /*非IE浏览器下设置透明度为60%*/
 }
 </style>

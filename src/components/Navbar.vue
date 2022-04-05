@@ -2,7 +2,9 @@
     <a-layout-header class="header" style="background-color: rgba(67,126,255);">
         <div class="ipsaLogo" style="float:left"/>
         <div class="userInfo" style="float:right">
-            <div class="userHead"></div>
+            <div class="userHead">
+              <h3 class="userName">{{nickname}}</h3>
+            </div>
         </div>
         <a-menu
             theme="dark"
@@ -34,7 +36,8 @@
     data() {
       return {
         collapsed: false,
-        isShow: false
+        isShow: false,
+        nickname: '用户名'
       }
     },
     methods: {
@@ -48,6 +51,9 @@
             this.$router.push({path:'/hrManageTable/' + value})
             this.close()
         }
+    },
+    mounted () {
+      this.nickname = this.$cookies.get("nickname")
     }
   };
   </script>
@@ -89,12 +95,19 @@
 
 
 .userHead {
-margin-top: 5px;
-border-radius: 50%;
-width: 50px;
-height: 50px;
-background: yellow;
+  margin-top: 5px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background: white;
+  text-align: center;
 }
 
-  </style>
+.userName{
+  position: absolute;
+  color: lightblue;
+  top: 0;
+}
+
+</style>
   

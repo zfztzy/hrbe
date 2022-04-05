@@ -1,6 +1,6 @@
 <template>
     <a-layout-footer style="text-align: center">
-        create by cfliangf@isoftstone.com
+        created by cfliangf@isoftstone.com
     </a-layout-footer>
 </template>
 

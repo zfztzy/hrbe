@@ -1,67 +1,9 @@
 <template>
   <div>
-    <div v-show="isNewApplicant">
-      <div class="newApplicantBackGround"></div>
-      <div class="newApplicant">
-        <a-input v-model="userName" placeholder="姓名" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="user" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="电话" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="mobile" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="毕业院校" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="book" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="学历" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="idcard" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="专业" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="tag" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="工作年限" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="calendar" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="面试岗位" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="read" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="地域" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="environment" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-input v-model="userName" placeholder="关联需求" style="margin:20px; width: 400px">
-          <a-icon slot="prefix" type="database" />
-          <a-tooltip slot="suffix" title="Extra information">
-            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
-          </a-tooltip>
-        </a-input>
-        <a-button @click="editApplicant" style="float: right; margin: 50px;">Cancel</a-button>
-        <a-button @click="editApplicant" style="float: right; margin-left: 50px; margin-top: 50px; margin-bottom: 50px;">Create</a-button>
-      </div>
-    </div>
-    <a-table :columns="columns" :data-source="data" bordered  :scroll="{ x: 1500, y: 1500 }">
+    <div v-show="isBatchControl || isBatchControl2" @click="close" class="maskLayer"></div>
+    <batch-input batchType='ProjectStatusInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
+    <batch-output batchType='ProjectStatusInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -151,6 +93,9 @@
   </div>
 </template>
 <script>
+
+import BatchInput from '@/components/batchControl/BatchInput.vue';
+import BatchOutput from '@/components/batchControl/BatchOutput.vue';
 const columns = [
   {
     title: '日期',
@@ -275,6 +220,12 @@ for (let i = 0; i < 100; i++) {
   });
 }
 export default {
+  components: { BatchInput, BatchOutput },
+  props: {
+    BatchNum: {
+      type: Number
+    }
+  },
   data() {
     this.cacheData = data.map(item => ({ ...item }));
     return {
@@ -286,6 +237,8 @@ export default {
       searchText: '',
       searchInput: null,
       searchedColumn: '',
+      isBatchControl: false,
+      isBatchControl2: false
     };
   },
   methods: {
@@ -373,28 +326,41 @@ export default {
       }).catch(err =>{
         console.log(err);
       })
-    }
+    },
+    close () {
+      this.isBatchControl = false
+      this.isBatchControl2 = false
+    },
   },
   created () {
     this.getProjectStatusInfo()
+  },
+  watch: {
+    BatchNum: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        if (newValue > oldValue){
+          this.isBatchControl = true
+        }
+        if (oldValue > newValue){
+          this.isBatchControl2 = true
+        }
+      }
+    },
+    cleanNum: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        this.isBatchControl = true
+      }
+    }
   }
-};
+}
 </script>
 <style scoped>
 .editable-row-operations a {
   margin-right: 8px;
-}
-
-.newApplicantBackGround {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 998;
-  background:rgba(0, 0, 0, 0.4);
-  filter:alpha(opacity=60);  /*设置透明度为60%*/
-  opacity:0.6;  /*非IE浏览器下设置透明度为60%*/
 }
 
 .newApplicant {
@@ -412,5 +378,30 @@ export default {
 
 .newApplicantBut {
     z-index: 100;
+}
+
+.isBatchControl{
+  width: 70%;
+  height: 70%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+  z-index: 999;
+  left: 15%;
+  top: 15%;
+  border-radius: 2%
+}
+
+.maskLayer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 998;
+  background:rgba(0, 0, 0, 0.4);
+  filter:alpha(opacity=60);  /*设置透明度为60%*/
+  opacity:0.6;  /*非IE浏览器下设置透明度为60%*/
 }
 </style>

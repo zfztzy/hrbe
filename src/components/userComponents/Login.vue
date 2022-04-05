@@ -30,6 +30,8 @@ export default {
       formInline: {
         user: '',
         password: '',
+        nickname: '',
+        region: ''
       },
     };
   },
@@ -47,9 +49,13 @@ export default {
         }
       }).then(res =>{
         if (res.data.msg == 'pass'){
+          console.log(res.data)
           this.$cookies.set("userName", this.formInline.user + '10086',60 * 60 * 1) //return this
           this.$cookies.set("password", this.formInline.password + '12315',60 * 60 * 1) //return this
-          this.$router.push('/hrManageTable')
+          this.$cookies.set("nickname", res.data.nickname + '',60 * 60 * 1) //return this
+          this.$cookies.set("region", res.data.region + '',60 * 60 * 1) //return this
+          console.log(this.$cookies.get("nickname"))
+          this.$router.push('/hrManageTable/applicant')
         } else {
           alert(res.data.msg)
         }

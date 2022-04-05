@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 // import { component } from 'vue/types/umd'
 // import Home from '../views/Home.vue'
 
-const Allprofile = () => import('../views/hr_manage_table/Allprofile')
+// const Allprofile = () => import('../views/hr_manage_table/Allprofile')
 const Applicant = () => import('../views/hr_manage_table/Applicant')
 const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
@@ -29,25 +29,20 @@ const routes = [
     path:'/',
     name:'appHome',
     component: AppHome,
-    redirect:'/hrManageTable/allProfile',
+    redirect:'/hrManageTable/applicant',
     children: [
       {
         path:'/hrManageTable',
         name:'home',
         component: HrManageTable,
-        redirect:'/hrManageTable/allProfile',
+        redirect:'/hrManageTable/applicant',
       },
       {
         path: '/hrManageTable',
         name: 'HrManageTable',
         component: HrManageTable,
-        redirect:'/hrManageTable/allProfile',
+        redirect:'/hrManageTable/applicant',
         children: [
-          {
-            path: 'allprofile',
-            name: 'Allprofile',
-            component: Allprofile
-          },
           {
             path: 'applicant',
             name: 'Applicant',

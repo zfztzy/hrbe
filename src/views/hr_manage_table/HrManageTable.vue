@@ -1,12 +1,30 @@
 <template>
   <a-layout-content>
-    <a-space :size="8" style="width: 100%; margin: 20px" class="" v-if="isShow">
-      <div v-for='(i) in filter' :key="i.title"  style="width:300px"><a-input :placeholder="i.title" v-model="i.vModel" type="text"/></div>
+    <a-space :size="8" style="width: 100%; margin-top: 20px; margin-bottom: 20px" class="" v-if="isShow">
+          <!-- :show-time="{ format: 'HH:mm' }" -->
+      <template  v-for='(i) in filter'>
+        <a-range-picker
+          style=" margin-left: 20px; "
+          v-if="i.title=='候选人推荐时间'"
+          :key="i.title"
+          format="YYYY-MM-DD"
+          :placeholder="['候选人推荐时间开始', '候选人推荐时间结束']"
+          @change="onChange"
+          @ok="onOk"
+        />
+        <div v-else :key="i.title"  style="width:300px">
+          <a-input style=" margin-left: 20px; " :placeholder="i.title" v-model="i.vModel" type="text"/>
+        </div>
+      </template>
     </a-space>
-    <a-space :size="8" style="width: 100%; margin-left: 20px; margin-bottom: 20px; margin-right: 20px" class="" v-if="isShow">
-      <div v-for='(i) in filter2' :key="i.title"  style="width:300px"><a-input :placeholder="i.title" v-model="i.vModel" type="text"/></div>
-        <a-button @click="updateFilter">搜索</a-button>
-        <a-button @click="resetFilter">清除</a-button>
+    <a-space :size="8" style="width: 100%;margin-bottom: 20px;" class="" v-if="isShow">
+      <template v-for='(i) in filter2'>
+        <div :key="i.title"  style="width:300px">
+          <a-input style=" margin-left: 20px; " :placeholder="i.title" v-model="i.vModel" type="text"/>
+        </div>
+      </template>
+        <a-button style=" margin-left: 20px; " @click="updateFilter">搜索</a-button>
+        <a-button style=" margin-left: 20px; " @click="resetFilter">清除</a-button>
     </a-space>
     <a-space style="float:right">
       <a-button class="tableButton" @click="newInfo">新增</a-button>
@@ -20,6 +38,47 @@
 <script>
 // @ is an alias to /src
 
+
+// deepCopy
+function typeOf(obj) {
+  const toString = Object.prototype.toString;
+  const map = {
+    '[object Boolean]'  : 'boolean',
+    '[object Number]'   : 'number',
+    '[object String]'   : 'string',
+    '[object Function]' : 'function',
+    '[object Array]'    : 'array',
+    '[object Date]'     : 'date',
+    '[object RegExp]'   : 'regExp',
+    '[object Undefined]': 'undefined',
+    '[object Null]'     : 'null',
+    '[object Object]'   : 'object'
+  };
+  return map[toString.call(obj)];
+}
+function deepCopy(data) {
+  const t = typeOf(data);
+  let o;
+
+  if (t === 'array') {
+    o = [];
+  } else if ( t === 'object') {
+    o = {};
+  } else {
+    return data;
+  }
+
+  if (t === 'array') {
+    for (let i = 0; i < data.length; i++) {
+      o.push(deepCopy(data[i]));
+    }
+  } else if ( t === 'object') {
+    for (let i in data) {
+      o[i] = deepCopy(data[i]);
+    }
+  }
+  return o;
+}
 
 
 export default {
@@ -47,6 +106,7 @@ export default {
     profileDetail(type){
         this.$router.push({path:'/hrManageTable/' + type})
     },
+    
     refresh(){
       window.scrollTo(0,0);
       this.switchTable()
@@ -91,7 +151,7 @@ export default {
     updateFilter () {
       this.filterData = {
         recommender__icontains: this.filter[0].vModel,
-        recommend_time__icontains: this.filter[1].vModel,
+        recommend_time__range: this.filter[1].vModel,
         related__icontains: this.filter[2].vModel,
         resume_status__icontains: this.filter[3].vModel,
         region__icontains: this.filter2[0].vModel,
@@ -99,8 +159,18 @@ export default {
       }
       console.log(this.filterData);
     },
-    log (a) {
-      console.log(a);
+    onChange (dateString) {
+      let aa =  deepCopy(dateString[0])
+      let bb =  deepCopy(dateString[1])
+      console.log(aa.format('YYYY-MM-DD 00:00:00'));
+      console.log(bb.format('YYYY-MM-DD 23:59:59'));
+      this.filter[1].vModel = []
+      this.filter[1].vModel.push(aa.format('YYYY-MM-DD 00:00:00'))
+      this.filter[1].vModel.push(bb.format('YYYY-MM-DD 23:59:59'))
+      console.log(this.filter[1].vModel);
+    },
+    onOk (dateString) {
+      this.filter[1].vModel = dateString
     }
   },
   watch:{
