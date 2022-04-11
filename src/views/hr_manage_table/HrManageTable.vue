@@ -31,7 +31,7 @@
       <a-button class="tableButton" @click="batchInput">批量导入</a-button>
       <a-button class="tableButton" @click="batchOutput">批量导出</a-button>
     </a-space>
-    <router-view :BatchNum="BatchNum" :newSwitch="newSwitch" :filterData='filterData' :cleanNum="cleanNum"/>
+    <router-view tableType='test' @save='log' :BatchNum="BatchNum" :newSwitch="newSwitch" :filterData='filterData' :cleanNum="cleanNum"/>
   </a-layout-content>
 </template>
 
@@ -171,6 +171,9 @@ export default {
     },
     onOk (dateString) {
       this.filter[1].vModel = dateString
+    },
+    log (childValue) {
+      console.log(childValue)
     }
   },
   watch:{

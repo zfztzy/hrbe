@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 
 // const Allprofile = () => import('../views/hr_manage_table/Allprofile')
 const Applicant = () => import('../views/hr_manage_table/Applicant')
+const CommonTable = () => import('@/components/CommonTable.vue')
 const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
@@ -62,6 +63,11 @@ const routes = [
             path: 'projectInfo',
             name: 'ProjectInfo',
             component: ProjectInfo,
+          },
+          {
+            path: 'commonTable',
+            name: 'CommonTable',
+            component: CommonTable,
           }
         ]
       },

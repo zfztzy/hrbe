@@ -1,23 +1,9 @@
 <template>
-  <div>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <a-divider />
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <a-divider>With Text</a-divider>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-    <a-divider dashed />
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
-      probare, quae sunt a te dicta? Refert tamen, quo modo.
-    </p>
-  </div>
+  <a-popover title="Title">
+    <template #content>
+      <p>Content</p>
+      <p>Content</p>
+    </template>
+    <a-button type="primary">Hover me</a-button>
+  </a-popover>
 </template>

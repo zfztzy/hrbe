@@ -108,7 +108,15 @@
               {{ text | datetime}}
             </template>
             <template v-else>
-              {{ text }}
+              <a-popover :title="'总数:' + record.total" @mouseenter="getNum(record)">
+                <template #content>
+                  <p>已入职:{{record.done}}</p>
+                  <p>流程中:{{record.filtering}}</p>
+                  <p>不通过:{{record.fail}}</p>
+                  <p>拒绝:{{record.giveUp}}</p>
+                </template>
+                {{ text }}
+              </a-popover>
             </template>
           </template>
         </div>
@@ -436,7 +444,9 @@ export default {
       isHtml5Editor: false,
       isNewRecruitment: false,
       model: {},
-      editing: false
+      editing: false,
+      title: '',
+      baseUrl: ''
     };
   },
   methods: {
@@ -486,10 +496,29 @@ export default {
       this.searchText = selectedKeys[0];
       this.searchedColumn = dataIndex;
     },
-    log () {
-      console.log(this.searchedColumn);
-      console.log(this.searchInput);
-      console.log(this.searchText);
+    log (a) {
+      console.log(a);
+    },
+    getNum (a) {
+      if (!a.total && a.total!==0) {
+        request.request({
+        url:this.baseUrl + 'applicant_according_to_recruitment/',
+        method: 'post',
+        data: {recruitmentId: a.id}
+        }).then(res =>{
+          const key = a.key
+          this.data[key].total = res.data.total
+          this.data[key].fail = res.data.fail
+          this.data[key].filtering = res.data.filtering
+          this.data[key].giveUp = res.data.giveUp
+          this.data[key].done = res.data.done
+          console.log(this.data[key]);
+          const newData = [...this.data];
+          this.data = newData;
+        }).catch(err =>{
+          console.log(err);
+        })
+      }
     },
     handleReset(clearFilters) {
       clearFilters();
@@ -566,6 +595,7 @@ export default {
   },
   created () {
     this.getRecruitmentInfo()
+    this.baseUrl = this.getBaseUrl()
   },
   watch: {
     BatchNum: {

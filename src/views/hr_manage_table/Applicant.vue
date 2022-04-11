@@ -141,6 +141,15 @@
               @click="selectRelated(record.key)"
               @change="e => handleChange(e.target.value, record.key, col)"
             />
+            <a-select
+              v-else-if="col=='process_status'" 
+              ref="select"
+              style="margin: -5px 0"
+              :value="text"
+              @change="e => handleChange(e, record.key, col)"
+            >
+              <a-select-option v-for="(value,key) in process_status_case" :key="key" :value='key'>{{value}}</a-select-option>
+            </a-select>
             <a-input
               v-else
               style="margin: -5px 0"
@@ -161,6 +170,8 @@
               </template>
               <template v-else-if="col=='giveup_time'||col=='final_time'||col=='graduation'||col=='entrance'||col=='arrival_time'">
                 {{ text | date}}
+              </template><template v-else-if="col=='process_status'">
+                {{ process_status_case[text] }}
               </template>
               <template v-else>
                 {{ text }}
@@ -562,7 +573,22 @@ export default {
       isSelectApplicant: false,
       model: '',
       isSelectRelatedId: false,
-      recruitmentModel: ''
+      recruitmentModel: '',
+      process_status_case: {
+        created: '创建',
+        fail1: '初筛不通过',
+        pass1: '初筛通过',
+        fail2: '初试不通过',
+        pass2: '初试通过',
+        fail3: '客户技面不通过',
+        pass3: '客户技面通过',
+        fail4: '客户综面不通过',
+        pass4: '客户综面通过',
+        discuss: '谈offer中',
+        standBy: '待入职',
+        giveUp: '放弃offer',
+        fellow: '已入职',
+      }
     };
   },
   props: {
@@ -733,11 +759,24 @@ export default {
   },
   filters: {
     datetime(text) {
+      if (text) {
       return moment(text).format('YYYY-MM-DD HH:MM:ss') 
+      } else {
+        return text
+      }
     },
     date(text) {
-      return moment(text).format('YYYY-MM-DD') 
+      if (text) {
+        return moment(text).format('YYYY-MM-DD') 
+      } else {
+        return text
+      }
+    },
+    phone(text) {
+      console.log(text)
+      return text + ' '
     }
+
   }
 
 };
