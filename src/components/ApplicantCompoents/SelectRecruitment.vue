@@ -43,7 +43,7 @@
                 margin-top: 10px"
                 max-height="400">
                 <el-table-column
-                prop="id"
+                prop="key"
                 label="项目ID"
                 width="120">
                 </el-table-column>
@@ -119,6 +119,7 @@ export default {
             this.$emit('close')
         },
         confirm () {
+            console.log(this.model);
             this.confirmData = {
                 key: this.model.key,
                 related: this.related,
@@ -128,15 +129,18 @@ export default {
             this.$emit('confirm', this.confirmData)
         },
         deleteRow(index, rows) { 
-            this.related = rows[index].id
+            this.related = rows[index].key
             this.pdu = rows[index].pdu
             this.project_name = rows[index].project
         },
         getRecruitmentInfo () {
             request.request({
-                url:'http://139.9.160.24/get_recruitment_info/',
+                url: this.getBaseUrl() + 'get_recruitment_info/',
                 method: 'post',
-                data: {filterData: this.filterData}
+                data: {
+                    filterData: this.filterData,
+                    filterRegion: this.$cookies.get("region")
+                }
             }).then(res =>{
                 let a = res.data.infoList
                 this.tableData.length = 0

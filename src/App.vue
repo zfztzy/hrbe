@@ -23,7 +23,7 @@ export default {
   methods: {
     checkLogin () {
       request.request({
-        url:'http://139.9.160.24/login/',
+        url: this.getBaseUrl() + 'login/',
         method: 'post',
         data: {
           userInfo: {

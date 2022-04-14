@@ -39,7 +39,7 @@ export default {
     handleSubmit() {
       console.log(this.formInline);
       request.request({
-        url:'http://139.9.160.24/login/',
+        url: this.getBaseUrl() + 'login/',
         method: 'post',
         data: {
           userInfo: {
@@ -50,10 +50,11 @@ export default {
       }).then(res =>{
         if (res.data.msg == 'pass'){
           console.log(res.data)
-          this.$cookies.set("userName", this.formInline.user + '10086',60 * 60 * 1) //return this
-          this.$cookies.set("password", this.formInline.password + '12315',60 * 60 * 1) //return this
-          this.$cookies.set("nickname", res.data.nickname + '',60 * 60 * 1) //return this
-          this.$cookies.set("region", res.data.region + '',60 * 60 * 1) //return this
+          this.$cookies.set("userName", this.formInline.user + '10086',60 * 60 * 1)
+          this.$cookies.set("password", this.formInline.password + '12315',60 * 60 * 1)
+          this.$cookies.set("nickname", res.data.nickname + '',60 * 60 * 1)
+          this.$cookies.set("region", res.data.region + '',60 * 60 * 1)
+          this.$cookies.set("level", res.data.level + '',60 * 60 * 1)
           console.log(this.$cookies.get("nickname"))
           this.$router.push('/hrManageTable/applicant')
         } else {

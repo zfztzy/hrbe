@@ -504,17 +504,21 @@ export default {
         request.request({
         url:this.baseUrl + 'applicant_according_to_recruitment/',
         method: 'post',
-        data: {recruitmentId: a.id}
+        data: {recruitmentId: a.key}
         }).then(res =>{
           const key = a.key
-          this.data[key].total = res.data.total
-          this.data[key].fail = res.data.fail
-          this.data[key].filtering = res.data.filtering
-          this.data[key].giveUp = res.data.giveUp
-          this.data[key].done = res.data.done
-          console.log(this.data[key]);
-          const newData = [...this.data];
-          this.data = newData;
+          for (const i of this.data) {
+            if (i.key===key) {
+              i.total = res.data.total
+              i.fail = res.data.fail
+              i.filtering = res.data.filtering
+              i.giveUp = res.data.giveUp
+              i.done = res.data.done
+              console.log(i);
+              const newData = [...this.data];
+              this.data = newData;
+            }
+          }
         }).catch(err =>{
           console.log(err);
         })
@@ -528,20 +532,28 @@ export default {
       this.isNewApplicant = !this.isNewApplicant
     },
     updateRecruitmentInfo (key) {
-      request.request({
-      url:'http://139.9.160.24/update_recruitment_info/',
-      method: 'post',
-      data: {data: this.data[key]}
-      }).then(res =>{
-        console.log(res);
-      }).catch(err =>{
-        console.log(err);
-      })
+      for (const i of this.data) {
+        if (i.key===key) {
+          request.request({
+          url: this.getBaseUrl() + 'update_recruitment_info/',
+          method: 'post',
+          data: {data: i}
+          }).then(res =>{
+            console.log(res);
+          }).catch(err =>{
+            console.log(err);
+          })
+        }
+      }
     },
     getRecruitmentInfo () {
       request.request({
-      url:'http://139.9.160.24/get_recruitment_info/',
-      method: 'post',
+        url: this.getBaseUrl() + 'get_recruitment_info/',
+        method: 'post',
+        data: {
+            filterData: this.filterData,
+            filterRegion: this.$cookies.get("region")
+        }
       }).then(res =>{
         let a = res.data.infoList
         this.data.length = 0
@@ -577,19 +589,31 @@ export default {
     },
     selectProject (key) {
       console.log(key)
-      this.recruitmentModel = this.data[key]
+      for (const i of this.data) {
+        if (i.key===key) {
+          this.recruitmentModel = i
+        }
+      }
       console.log(this.recruitmentModel)
       this.isSelectRelatedId = true
     },
     startEditor (key, editing) {
       this.editing = editing
       this.isHtml5Editor = true
-      this.model = this.data[key]
+      for (const i of this.data) {
+        if (i.key===key) {
+          this.model = i
+        }
+      }
     },
     updateRequirements (childValue) {
       console.log(childValue);
       const key = childValue.model.key
-      this.data[key].requirements = childValue.value
+      for (const i of this.data) {
+        if (i.key===key) {
+          i.requirements = childValue.value
+        }
+      }
       this.updateRecruitmentInfo(key)
     }
   },

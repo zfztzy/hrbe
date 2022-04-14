@@ -53,7 +53,7 @@ export default {
       uploading: false,
       excelType: 'ApplicantInfo',
       fileName: '',
-      filePath:'http://139.9.160.24/static/model/',
+      filePath:'',
       isDisabled: true,
       batchTypeName: ''
     };
@@ -99,7 +99,7 @@ export default {
       console.log(config);
       // axios.post("http://139.9.160.24/save_excel/", formData, config);
       request.request({
-      url:'http://139.9.160.24/save_excel/',
+      url: this.getBaseUrl() + 'save_excel/',
       method: 'post',
       data: formData,
       headers: { "Content-Type": "multipart/form-data" }
@@ -120,6 +120,7 @@ export default {
   },
   created () {
     this.handleChange(this.batchType)
+    this.filePath = this.getBaseUrl() + 'static/model/'
   }
 };
 </script>

@@ -56,7 +56,7 @@ export default {
     getFileList() {
       console.log(this);
       request.request({
-      url:'http://139.9.160.24/get_file_list/',
+      url: this.getBaseUrl() + 'get_file_list/',
       method: 'post',
       data: {batchType: this.batchType},
       headers: { "Content-Type": "multipart/form-data" }
@@ -69,7 +69,7 @@ export default {
     newDownloadExcel() {
       console.log(this);
       request.request({
-      url:'http://139.9.160.24/new_download_excel/',
+      url: this.getBaseUrl() + 'new_download_excel/',
       method: 'post',
       data: {batchType: this.batchType},
       headers: { "Content-Type": "multipart/form-data" }

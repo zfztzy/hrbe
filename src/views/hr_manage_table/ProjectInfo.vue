@@ -57,7 +57,7 @@
         </template>
       </template>
       <template
-        v-for="col in ['project_id', 'department', 'pdu', 'business', 
+        v-for="col in ['key', 'department', 'pdu', 'business', 
         'name', 'region', 'delivery_leader', 'pm', 
         'qa', 'hr', 'hwpm']"
         :slot="col"
@@ -98,9 +98,9 @@ import BatchOutput from '@/components/batchControl/BatchOutput.vue';
 const columns = [
   {
     title: 'project_id',
-    dataIndex: 'project_id',
+    dataIndex: 'key',
     width: 200,
-    scopedSlots: { customRender: 'project_id' },
+    scopedSlots: { customRender: 'key' },
   },
   {
     title: '部门',
@@ -269,10 +269,16 @@ export default {
       this.isNewApplicant = !this.isNewApplicant
     },
     updateProjectInfo (key) {
+      let target = {} 
+      for (const i of this.data) {
+        if (i.key===key) {
+          target = i
+        }
+      }
       request.request({
-      url:'http://139.9.160.24/update_project_info/',
+      url: this.getBaseUrl() + 'update_project_info/',
       method: 'post',
-      data: {data: this.data[key]}
+      data: {data: target}
       }).then(res =>{
         console.log(res);
       }).catch(err =>{
@@ -281,9 +287,12 @@ export default {
     },
     getProjectInfo () {
       request.request({
-      url:'http://139.9.160.24/get_project_info/',
+      url: this.getBaseUrl() + 'get_project_info/',
       method: 'post',
-      data: {filterData: this.filterData}
+      data: {
+        filterData: this.filterData,
+        filterRegion: this.$cookies.get("region")
+      }
       }).then(res =>{
         let a = res.data.infoList
         this.data.length = 0

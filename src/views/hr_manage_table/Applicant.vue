@@ -678,31 +678,40 @@ export default {
       this.getApplicantInfo()
     },
     updateApplicant (key) {
-      console.log(this.data)
-      console.log(key);
-      console.log(this.data[key]);
-      request.request({
-      url:'http://139.9.160.24/update_applicant_info/',
-      method: 'post',
-      data: {data: this.data[key]}
-      }).then(res =>{
-        console.log(res);
-      }).catch(err =>{
-        console.log(err);
-      })
+      for (const i of this.data) {
+        if (i.key===key) {
+          console.log(i)
+          console.log(key);
+          console.log(i.key);
+          request.request({
+          url: this.getBaseUrl() + 'update_applicant_info/',
+          method: 'post',
+          data: {data: i}
+          }).then(res =>{
+            console.log(res);
+          }).catch(err =>{
+            console.log(err);
+          })
+        }
+      }
     },
     getApplicantInfo () {
+      this.cacheData = []
+      this.data = this.cacheData
       request.request({
-      url:'http://139.9.160.24/get_applicant_info/',
+      url: this.getBaseUrl() + 'get_applicant_info/',
       method: 'post',
-      data: {filterData: this.filterData}
+      data: {
+        filterData: this.filterData,
+        filterRegion: this.$cookies.get("region")
+      }
       }).then(res =>{
         let a = res.data.applicantList
         this.data.length = 0
         for (let i = 0; i < a.length; i++) {
           this.data.push(a[i]);
         }
-        this.cacheData = data.map(item => ({ ...item }));
+        this.cacheData = this.data.map(item => ({ ...item }));
       }).catch(err =>{
         console.log(err);
       })
@@ -714,7 +723,11 @@ export default {
     },
     selectRelated (key) {
       console.log(key)
-      this.recruitmentModel = this.data[key]
+      for (const i of this.data) {
+        if (i.key===key) {
+          this.recruitmentModel = i
+        }
+      }
       console.log(this.recruitmentModel)
       this.isSelectRelatedId = true
     },

@@ -301,10 +301,16 @@ export default {
       this.isNewApplicant = !this.isNewApplicant
     },
     updateProjectStatusInfo (key) {
+      let target = {} 
+      for (const i of this.data) {
+        if (i.key===key) {
+          target = i
+        }
+      }
       request.request({
-      url:'http://139.9.160.24/update_project_status/',
+      url: this.getBaseUrl() + 'update_project_status/',
       method: 'post',
-      data: {data: this.data[key]}
+      data: {data: target}
       }).then(res =>{
         console.log(res);
       }).catch(err =>{
@@ -313,8 +319,12 @@ export default {
     },
     getProjectStatusInfo () {
       request.request({
-      url:'http://139.9.160.24/get_project_status_info/',
+      url: this.getBaseUrl() + 'get_project_status_info/',
       method: 'post',
+      data: {
+        filterData: this.filterData,
+        filterRegion: this.$cookies.get("region")
+      }
       }).then(res =>{
         let a = res.data.infoList
         this.data.length = 0

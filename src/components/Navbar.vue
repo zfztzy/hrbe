@@ -2,23 +2,39 @@
     <a-layout-header class="header" style="background-color: rgba(67,126,255);">
         <div class="ipsaLogo" style="float:left"/>
         <div class="userInfo" style="float:right">
-            <div class="userHead">
-              <h3 class="userName">{{nickname}}</h3>
-            </div>
+            <a-dropdown>
+              <div class="userHead">
+                <a-badge :count="count"><a-avatar shape="square" icon="user"/>
+                {{nickname}}</a-badge>
+              </div>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a href="javascript:;" @click="add">用户主页</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;">用户设置</a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a href="javascript:;" @click="logOut">注销</a>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
         </div>
         <a-menu
             theme="dark"
             mode="horizontal"
-            :default-selected-keys="['2']"
+            :default-selected-keys="['1']"
             :style="{ lineHeight: '64px' }"
             style="background-color: rgba(67,126,255);"
         >
             <a-menu-item key="1" @click="showTopMenu">
-            招聘
+              招聘
             </a-menu-item>
             <a-menu-item key="2">
+              项目
             </a-menu-item>
             <a-menu-item key="3">
+              KPI
             </a-menu-item>
         </a-menu>
         <div class="topMenu" v-show="isShow" @mouseleave="close">
@@ -37,7 +53,8 @@
       return {
         collapsed: false,
         isShow: false,
-        nickname: '用户名'
+        nickname: '用户名',
+        count: 0
       }
     },
     methods: {
@@ -50,6 +67,17 @@
         jumpPath(value){
             this.$router.push({path:'/hrManageTable/' + value})
             this.close()
+        },
+        add () {
+          this.count += 1
+        },
+        logOut () {
+          this.$cookies.remove("userName")
+          this.$cookies.remove("password")
+          this.$cookies.remove("nickname")
+          this.$cookies.remove("region")
+          alert('注销成功')
+          this.$router.push('/Login')
         }
     },
     mounted () {
@@ -95,12 +123,7 @@
 
 
 .userHead {
-  margin-top: 5px;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  background: white;
-  text-align: center;
+  color: white;
 }
 
 .userName{
@@ -109,5 +132,5 @@
   top: 0;
 }
 
+
 </style>
-  

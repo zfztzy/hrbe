@@ -139,9 +139,12 @@ export default {
         },
         getProjectInfo () {
             request.request({
-                url:'http://139.9.160.24/get_project_info/',
+                url: this.getBaseUrl() + 'get_project_info/',
                 method: 'post',
-                data: {filterData: this.filterData}
+                data: {
+                    filterData: this.filterData,
+                    filterRegion: this.$cookies.get("region")
+                }
             }).then(res =>{
                 let a = res.data.infoList
                 this.tableData.length = 0

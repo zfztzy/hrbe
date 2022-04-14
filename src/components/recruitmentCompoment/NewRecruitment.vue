@@ -97,7 +97,7 @@ export default {
       && this.recruiter !== undefined && this.department !== undefined && this.pdu !== undefined 
       && this.project !== undefined){
         request.request({
-        url:'http://139.9.160.24/create_recruitment_info/',
+        url: this.getBaseUrl() + 'create_recruitment_info/',
         method: 'post',
         data: {
           data: {

@@ -91,7 +91,7 @@ export default {
       && this.graduation !== undefined && this.graduated_from !== undefined && this.major !== undefined 
       && this.phone_num !== undefined){
         request.request({
-        url:'http://139.9.160.24/create_applicant_info/',
+        url: this.getBaseUrl() + 'create_applicant_info/',
         method: 'post',
         data: {
           data: {
