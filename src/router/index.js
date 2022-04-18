@@ -7,6 +7,7 @@ import VueRouter from 'vue-router'
 const Applicant = () => import('../views/hr_manage_table/Applicant')
 const CommonTable = () => import('@/components/CommonTable.vue')
 const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
+const ProjectManager = () => import('../views/project_manager/ProjectManger')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
 const ProjectInfo = () => import('../views/hr_manage_table/ProjectInfo')
@@ -59,6 +60,24 @@ const routes = [
             name: 'PojectStatus',
             component: PojectStatus,
           },
+          {
+            path: 'projectInfo',
+            name: 'ProjectInfo',
+            component: ProjectInfo,
+          },
+          {
+            path: 'commonTable',
+            name: 'CommonTable',
+            component: CommonTable,
+          }
+        ]
+      },
+      {
+        path: '/projectManager',
+        name: 'ProjectManager',
+        component: ProjectManager,
+        redirect:'/hrManageTable/projectInfo',
+        children: [
           {
             path: 'projectInfo',
             name: 'ProjectInfo',

@@ -30,7 +30,7 @@
             <a-menu-item key="1" @click="showTopMenu">
               招聘
             </a-menu-item>
-            <a-menu-item key="2">
+            <a-menu-item key="2" @click="showTopMenu2">
               项目
             </a-menu-item>
             <a-menu-item key="3">
@@ -45,6 +45,11 @@
                 <a @click="jumpPath('ProjectInfo')"><h5>招聘看板</h5></a>
             </a-space>
         </div>
+        <div class="topMenu" v-show="isShow2" @mouseleave="close">
+            <a-space :size="200" style="margin-left:10%">
+                <a @click="jumpPath2('ProjectInfo')"><h5>项目信息</h5></a>
+            </a-space>
+        </div>
     </a-layout-header>
 </template>
   <script>
@@ -54,18 +59,27 @@
         collapsed: false,
         isShow: false,
         nickname: '用户名',
-        count: 0
+        count: 0,
+        isShow2: false
       }
     },
     methods: {
         showTopMenu() {
             this.isShow = true  
         },
+        showTopMenu2() {
+            this.isShow2 = true  
+        },
         close () {
             this.isShow = false
+            this.isShow2 = false
         },
         jumpPath(value){
             this.$router.push({path:'/hrManageTable/' + value})
+            this.close()
+        },
+        jumpPath2(value){
+            this.$router.push({path:'/projectManager/' + value})
             this.close()
         },
         add () {

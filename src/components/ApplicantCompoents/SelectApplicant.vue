@@ -241,6 +241,24 @@ export default {
         this.model.final_time = this.formatDate(this.model.final_time)
         this.model.entrance = this.formatDate(this.model.entrance)
         this.model.graduation = this.formatDate(this.model.graduation)
+    },
+    watch: {
+        Applicant: {
+            handler: function (newValue, oldValue) {
+                console.log(newValue)
+                console.log(oldValue)
+                this.model = deepCopy(this.Applicant)
+                this.model.hw_interview_time2 = this.formatDateTime(this.model.hw_interview_time2)
+                this.model.hw_interview_time1 = this.formatDateTime(this.model.hw_interview_time1)
+                this.model.machine_test_time = this.formatDateTime(this.model.machine_test_time)
+                this.model.own_interview_time = this.formatDateTime(this.model.own_interview_time)
+                this.model.recommend_time = this.formatDate(this.model.recommend_time)
+                this.model.arrival_time = this.formatDate(this.model.arrival_time)
+                this.model.final_time = this.formatDate(this.model.final_time)
+                this.model.entrance = this.formatDate(this.model.entrance)
+                this.model.graduation = this.formatDate(this.model.graduation)
+            }
+        }
     }
 }
 </script>

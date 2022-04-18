@@ -57,10 +57,9 @@
         </template>
       </template>
       <template
-        v-for="col in ['date', 'department', 'pdu', 'project', 
-        'region', 'sow_num', 'project_num', 'new_project_num', 
-        'offset_num', 'monthly_target', 'urgency', 'mouthly_reach',
-        'project_satisfaction', 'project_num_all', 'remarks', 'mouthly_target_reach']"
+        v-for="col in ['sow_num', 'project_num', 'new_project_num', 
+        'offset_num', 'monthly_target', 'urgency', 'monthly_reach',
+        'project_satisfaction', 'project_num_all', 'remarks', 'monthly_target_reach']"
         :slot="col"
         slot-scope="text, record"
       >
@@ -183,15 +182,15 @@ const columns = [
   },
   {
     title: '月度满足数',
-    dataIndex: 'mouthly_reach',
+    dataIndex: 'monthly_reach',
     width: 150,
-    scopedSlots: { customRender: 'mouthly_reach' },
+    scopedSlots: { customRender: 'monthly_reach' },
   },
   {
     title: '目标达成',
-    dataIndex: 'mouthly_target_reach',
+    dataIndex: 'monthly_target_reach',
     width: 150,
-    scopedSlots: { customRender: 'mouthly_target_reach' },
+    scopedSlots: { customRender: 'monthly_target_reach' },
   },
   {
     title: '备注',

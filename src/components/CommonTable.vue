@@ -1,7 +1,7 @@
 <template>
   <a-table v-if="columns" :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 400 }">
     <template
-      v-for="col in ['name', 'age', 'address']"
+      v-for="col in colList"
       :slot="col"
       slot-scope="text, record"
     >
@@ -58,6 +58,7 @@ export default {
       data,
       columns: undefined,
       editingKey: '',
+      colList:[]
     };
   },
   methods: {
@@ -110,6 +111,10 @@ export default {
       data: {tableType: this.tableType}
       }).then(res =>{
         this.columns = res.data.columns;
+        this.columns.forEach(element => {
+          this.colList.push(element.dataIndex)
+        });
+        console.log(this.colList);
       }).catch(err =>{
         console.log(err);
       })

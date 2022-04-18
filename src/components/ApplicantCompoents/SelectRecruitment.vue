@@ -44,7 +44,7 @@
                 max-height="400">
                 <el-table-column
                 prop="key"
-                label="项目ID"
+                label="需求ID"
                 width="120">
                 </el-table-column>
                 <el-table-column
@@ -56,6 +56,10 @@
                 prop="project"
                 label="项目名称"
                 width="300">
+                </el-table-column>
+                <el-table-column
+                prop="position_attribute"
+                label="岗位">
                 </el-table-column>
                 <el-table-column
                 prop="skill_keyword"

@@ -386,7 +386,23 @@ const columns = [
     title: '关联需求',
     dataIndex: 'related',
     width: 200,
-    scopedSlots: { customRender: 'related' },
+    scopedSlots:  {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon', 
+      customRender: 'related' 
+    },
+    onFilter: (value, record) =>
+      record.related
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
   },
   {
     title: 'PDU',
