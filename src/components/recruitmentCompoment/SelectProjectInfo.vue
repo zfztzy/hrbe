@@ -4,8 +4,8 @@
         <el-scrollbar style="height:100%">
             <a-row :gutter="16"  style="margin: 20px" >
                 <a-col :span="4">
-                    <a-statistic v-if='department' title="部门" :value="department" groupSeparator="" class="demo-class"/>
-                    <a-statistic v-else title="department" value="---" class="demo-class"/>
+                    <a-statistic v-if='department' title="部门" :value="department" groupSeparator="" class="demo-class" />
+                    <a-statistic v-else title="部门" value="---" class="demo-class" />
                 </a-col>
                 <a-col :span="4">
                     <a-statistic v-if='pdu' title="PDU" :value="pdu" groupSeparator="" class="demo-class"/>
@@ -18,7 +18,7 @@
             </a-row>
             <a-row :gutter="16"  style="margin: 20px" >
                 <a-col :span="4">
-                    <a-select placeholder="部门" style="width: 200px; position: absolute; top: 0; left: 0;" v-model="department2" class="typeChoice">
+                    <a-select  @click="logInfo" placeholder="部门" style="width: 200px; position: absolute; top: 0; left: 0;" v-model="department2" class="typeChoice">
                         <template v-for="i in departmentList">
                             <a-select-option :key='i' :value="i">
                                 {{i}}
@@ -146,7 +146,7 @@ export default {
                     filterRegion: this.$cookies.get("region")
                 }
             }).then(res =>{
-                let a = res.data.infoList
+                let a = res.data.tableData
                 this.tableData.length = 0
                 for (let i = 0; i < a.length; i++) {
                     this.tableData.push(a[i]);
@@ -173,6 +173,8 @@ export default {
             }).catch(err =>{
                 console.log(err);
             })
+        },
+        logInfo() {
         }
     },
     created() {
@@ -182,9 +184,18 @@ export default {
     },
     mounted() {
         if (this.model) {
-            this.related = this.model.related
+            this.department = this.model.department
             this.pdu = this.model.pdu
             this.project_name = this.model.project_name
+        }
+    },
+    watch: {
+        model: {
+            handler: function (newValue) {
+                this.department = newValue.department
+                this.pdu = newValue.pdu
+                this.project_name = newValue.project_name
+            }
         }
     }
 }

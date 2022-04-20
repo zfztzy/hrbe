@@ -26,12 +26,18 @@
         <a-button style=" margin-left: 20px; " @click="updateFilter">搜索</a-button>
         <a-button style=" margin-left: 20px; " @click="resetFilter">清除</a-button>
     </a-space>
-    <a-space style="float:right">
+    <a-space v-if="!isProjectStatus" style="float:right">
       <a-button class="tableButton" @click="newInfo">新增</a-button>
       <a-button class="tableButton" @click="batchInput">批量导入</a-button>
       <a-button class="tableButton" @click="batchOutput">批量导出</a-button>
     </a-space>
-    <router-view tableType='project_info' @save='log' :BatchNum="BatchNum" :newSwitch="newSwitch" :filterData='filterData' :cleanNum="cleanNum"/>
+    <a-space class="SelectMonth" v-if="isProjectStatus">
+      <a-month-picker placeholder="Select month" @change="onChange2" />
+    </a-space>
+    <a-space v-if="isProjectStatus" style="float:right">
+      <a-button class="tableButton" @click="batchOutput">导出</a-button>
+    </a-space>
+    <router-view :BatchNum="BatchNum" :newSwitch='newSwitch'/>
   </a-layout-content>
 </template>
 
@@ -99,14 +105,14 @@ export default {
       BatchNum: 0,
       isShow: false,
       filterData: {},
-      cleanNum: 0
+      cleanNum: 0,
+      isProjectStatus: false
     }
   },    
   methods:{
     profileDetail(type){
         this.$router.push({path:'/hrManageTable/' + type})
     },
-    
     refresh(){
       window.scrollTo(0,0);
       this.switchTable()
@@ -120,11 +126,19 @@ export default {
     newInfo() {
       this.newSwitch += 1
     },
+    onChange2(date, dateString) {
+      console.log(date, dateString);
+    },
     switchTable () {
       if (this.$route.name==='Applicant') {
         this.isShow = true
       } else {
         this.isShow = false
+      }
+      if (this.$route.name==='PojectStatus') {
+        this.isProjectStatus = true
+      } else {
+        this.isProjectStatus = false
       }
     },
     resetFilter () {
@@ -189,6 +203,13 @@ export default {
 <style>
 .tableButton {
   float:right;
+  margin: 20px;
+  z-index: 100;
+}
+
+.SelectMonth {
+  position: absolute;
+  float: left;
   margin: 20px;
   z-index: 100;
 }

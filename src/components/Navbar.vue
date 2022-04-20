@@ -42,7 +42,7 @@
                 <a @click="jumpPath('Applicant')"><h5>候选人管理</h5></a>
                 <a @click="jumpPath('Recruitment')"><h5>招聘需求</h5></a>
                 <a @click="jumpPath('PojectStatus')"><h5>项目满足度</h5></a>
-                <a @click="jumpPath('ProjectInfo')"><h5>招聘看板</h5></a>
+                <!-- <a @click="jumpPath('ProjectInfo')"><h5>招聘看板</h5></a> -->
             </a-space>
         </div>
         <div class="topMenu" v-show="isShow2" @mouseleave="close">

@@ -3,7 +3,7 @@
     <div v-show="isBatchControl || isBatchControl2" @click="close" class="maskLayer"></div>
     <batch-input batchType='ProjectStatusInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
     <batch-output batchType='ProjectStatusInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
-    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 70 }"  :scroll="{ x: 1500, y: 550 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -84,7 +84,12 @@
             </a-popconfirm>
           </span>
           <span v-else>
-            <a :disabled="editingKey !== ''" @click="() => edit(record.key)">Edit</a>
+            <template v-if="record.canEdit">
+              <a :disabled="editingKey !== ''" @click="() => edit(record.key)">Edit</a>
+            </template>
+            <template v-else>
+              <a style="color:#d9d9d9">Edit</a>
+            </template>
           </span>
         </div>
       </template>
@@ -328,7 +333,6 @@ export default {
         let a = res.data.infoList
         this.data.length = 0
         for (let i = 0; i < a.length; i++) {
-          console.log(a[i]);
           this.data.push(a[i]);
         }
         this.cacheData = data.map(item => ({ ...item }));

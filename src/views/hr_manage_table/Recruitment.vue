@@ -79,6 +79,22 @@
               @click="selectProject(record.key)"
               @change="e => handleChange(e.target.value, record.key, col)"
             />
+            <a-input
+              v-else-if="col=='pdu'" 
+              placeholder="PDU"
+              style="margin: -5px 0"
+              :value="text"
+              @click="selectProject(record.key)"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+            <a-input
+              v-else-if="col=='department'" 
+              placeholder="部门"
+              style="margin: -5px 0"
+              :value="text"
+              @click="selectProject(record.key)"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
             <template v-else-if="col=='requirements'" >
               <a rel="noopener noreferrer" @click="startEditor(record.key, true)" style="
               display: -webkit-box;
@@ -592,6 +608,7 @@ export default {
       for (const i of this.data) {
         if (i.key===key) {
           this.recruitmentModel = i
+          console.log(i);
         }
       }
       console.log(this.recruitmentModel)

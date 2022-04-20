@@ -58,7 +58,8 @@ export default {
       data,
       columns: undefined,
       editingKey: '',
-      colList:[]
+      colList:[],
+      isNewing: false
     };
   },
   methods: {
@@ -90,9 +91,9 @@ export default {
         Object.assign(targetCache, target);
         this.cacheData = newCacheData;
       }
+      this.$emit('save', newData, this.editingKey)
       this.editingKey = '';
       this.cacheData = this.data.map(item => ({ ...item }));
-      this.$emit('save', newData)
     },
     cancel(key) {
       const newData = [...this.data];
@@ -101,6 +102,12 @@ export default {
       if (target) {
         Object.assign(target, this.cacheData.find(item => key === item.key));
         delete target.editable;
+        this.data = newData;
+      }
+      if (this.isNewing) {
+        this.isNewing = false
+        const newData = [...this.data];
+        newData.remove(0)
         this.data = newData;
       }
     },
@@ -121,11 +128,15 @@ export default {
     },
     getData () {
       request.request({
-      url: this.getBaseUrl() + 'get_tableType_data/',
+      url: this.getBaseUrl() + 'get_common_data/',
       method: 'post',
-      data: {tableType: this.tableType}
+      data: {
+        tableType: this.tableType,
+        filterRegion: this.$cookies.get("region")
+      }
       }).then(res =>{
-        this.columns = res.data.columns;
+        this.data = res.data.tableData;
+        this.cacheData = this.data.map(item => ({ ...item }));
       }).catch(err =>{
         console.log(err);
       })
@@ -133,18 +144,17 @@ export default {
   },
   created () {
     this.getColumns()
+    this.getData()
   },
   watch: {
     newSwitch:{
       handler () {
+        this.isNewing = true
         for (let index = 0; index < this.data.length; index++) {
           this.data[index].key += 1;
         }
         this.data.unshift({
           key: 0,
-          name: undefined,
-          age: undefined,
-          address: undefined,
         });
         this.cacheData = this.data.map(item => ({ ...item }));
         const newData = [...this.data];

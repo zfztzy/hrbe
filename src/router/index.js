@@ -11,6 +11,7 @@ const ProjectManager = () => import('../views/project_manager/ProjectManger')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
 const ProjectInfo = () => import('../views/hr_manage_table/ProjectInfo')
+const ProjectInfo2 = () => import('../views/project_manager/ProjectInfo')
 const ClockIn = () => import('../views/clockIn/ClockIn.vue')
 const Diary = () => import('../views/diary/Diary')
 const Difficulty = () => import('../views/difficulty/Difficulty')
@@ -81,7 +82,7 @@ const routes = [
           {
             path: 'projectInfo',
             name: 'ProjectInfo',
-            component: ProjectInfo,
+            component: ProjectInfo2,
           },
           {
             path: 'commonTable',
