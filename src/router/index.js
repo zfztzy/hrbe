@@ -10,8 +10,8 @@ const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
 const ProjectManager = () => import('../views/project_manager/ProjectManger')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
-const ProjectInfo = () => import('../views/hr_manage_table/ProjectInfo')
-const ProjectInfo2 = () => import('../views/project_manager/ProjectInfo')
+const pduinfo = () => import('../views/project_manager/PduInfo')
+const ProjectInfo = () => import('../views/project_manager/ProjectInfo')
 const ClockIn = () => import('../views/clockIn/ClockIn.vue')
 const Diary = () => import('../views/diary/Diary')
 const Difficulty = () => import('../views/difficulty/Difficulty')
@@ -62,11 +62,6 @@ const routes = [
             component: PojectStatus,
           },
           {
-            path: 'projectInfo',
-            name: 'ProjectInfo',
-            component: ProjectInfo,
-          },
-          {
             path: 'commonTable',
             name: 'CommonTable',
             component: CommonTable,
@@ -78,11 +73,16 @@ const routes = [
         name: 'ProjectManager',
         component: ProjectManager,
         redirect:'/hrManageTable/projectInfo',
-        children: [
+        children: [  
+          {
+            path: 'pduinfo',
+            name: 'pduinfo',
+            component: pduinfo,
+          },
           {
             path: 'projectInfo',
             name: 'ProjectInfo',
-            component: ProjectInfo2,
+            component: ProjectInfo,
           },
           {
             path: 'commonTable',

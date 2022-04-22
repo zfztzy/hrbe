@@ -279,6 +279,36 @@ const columns = [
     }
   },
   {
+    title: '类型',
+    dataIndex: 'type2',
+    width: 200,
+    scopedSlots: {
+      customRender: 'type2' 
+    }
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 100,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'status',
+    },
+    onFilter: (value, record) =>
+      record.status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
+  },
+  {
     title: '岗位要求',
     dataIndex: 'requirements',
     width: 200,
@@ -373,28 +403,6 @@ const columns = [
     dataIndex: 'arrival_num',
     width: 120,
     scopedSlots: { customRender: 'arrival_num' },
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    width: 100,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'status',
-    },
-    onFilter: (value, record) =>
-      record.status
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    }
   },
   {
     title: '关闭时间',

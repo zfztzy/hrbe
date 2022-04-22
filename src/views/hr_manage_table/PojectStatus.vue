@@ -58,8 +58,7 @@
       </template>
       <template
         v-for="col in ['sow_num', 'project_num', 'new_project_num', 
-        'offset_num', 'monthly_target', 'urgency', 'monthly_reach',
-        'project_satisfaction', 'project_num_all', 'remarks', 'monthly_target_reach']"
+        'offset_num', 'monthly_target', 'urgency', 'monthly_reach', 'remarks',]"
         :slot="col"
         slot-scope="text, record"
       >

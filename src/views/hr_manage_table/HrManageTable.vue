@@ -36,6 +36,7 @@
     </a-space>
     <a-space v-if="isProjectStatus" style="float:right">
       <a-button class="tableButton" @click="batchOutput">导出</a-button>
+      <a-button class="tableButton">图标总览</a-button>
     </a-space>
     <router-view tableType='test' @save='log' :BatchNum="BatchNum" :newSwitch="newSwitch" :filterData='filterData' :cleanNum="cleanNum"/>
   </a-layout-content>

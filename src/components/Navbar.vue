@@ -28,13 +28,13 @@
             style="background-color: rgba(67,126,255);"
         >
             <a-menu-item key="1" @click="showTopMenu">
-              招聘
+              招聘管理
             </a-menu-item>
             <a-menu-item key="2" @click="showTopMenu2">
-              项目
+              项目管理
             </a-menu-item>
             <a-menu-item key="3">
-              KPI
+              运营管理
             </a-menu-item>
         </a-menu>
         <div class="topMenu" v-show="isShow" @mouseleave="close">
@@ -42,11 +42,12 @@
                 <a @click="jumpPath('Applicant')"><h5>候选人管理</h5></a>
                 <a @click="jumpPath('Recruitment')"><h5>招聘需求</h5></a>
                 <a @click="jumpPath('PojectStatus')"><h5>项目满足度</h5></a>
-                <!-- <a @click="jumpPath('ProjectInfo')"><h5>招聘看板</h5></a> -->
+                <a @click="jumpPath('RecruitChart')"><h5>招聘看板</h5></a>
             </a-space>
         </div>
         <div class="topMenu" v-show="isShow2" @mouseleave="close">
             <a-space :size="200" style="margin-left:10%">
+                <a @click="jumpPath2('pduinfo')"><h5>PDU信息</h5></a>
                 <a @click="jumpPath2('ProjectInfo')"><h5>项目信息</h5></a>
             </a-space>
         </div>
@@ -65,22 +66,24 @@
     },
     methods: {
         showTopMenu() {
-            this.isShow = true  
+          this.close()
+          this.isShow = true  
         },
         showTopMenu2() {
-            this.isShow2 = true  
+          this.close()
+          this.isShow2 = true 
         },
         close () {
-            this.isShow = false
-            this.isShow2 = false
+          this.isShow = false
+          this.isShow2 = false
         },
         jumpPath(value){
-            this.$router.push({path:'/hrManageTable/' + value})
-            this.close()
+          this.$router.push({path:'/hrManageTable/' + value})
+          this.close()
         },
         jumpPath2(value){
-            this.$router.push({path:'/projectManager/' + value})
-            this.close()
+          this.$router.push({path:'/projectManager/' + value})
+          this.close()
         },
         add () {
           this.count += 1
