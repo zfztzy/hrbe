@@ -10,6 +10,7 @@ const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
 const BusinessManager = () => import('../views/business_manager/BusinessManager')
 const ProjectManager = () => import('../views/project_manager/ProjectManger')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
+const RecruitChart = () => import('../views/hr_manage_table/RecruitChart')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
 const pduinfo = () => import('../views/project_manager/PduInfo')
 const ProjectInfo = () => import('../views/project_manager/ProjectInfo')
@@ -65,9 +66,9 @@ const routes = [
             component: PojectStatus,
           },
           {
-            path: 'commonTable',
-            name: 'CommonTable',
-            component: CommonTable,
+            path: 'RecruitChart',
+            name: 'RecruitChart',
+            component: RecruitChart,
           }
         ]
       },
@@ -91,11 +92,6 @@ const routes = [
             path: 'PoInfo',
             name: 'PoInfo',
             component: PoInfo,
-          },
-          {
-            path: 'commonTable',
-            name: 'CommonTable',
-            component: CommonTable,
           }
         ]
       },

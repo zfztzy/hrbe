@@ -36,9 +36,18 @@
     </a-space>
     <a-space v-if="isProjectStatus" style="float:right">
       <a-button class="tableButton" @click="batchOutput">导出</a-button>
-      <a-button class="tableButton">图标总览</a-button>
+      <a-button class="tableButton" @click="showDrawer">图表总览</a-button>
     </a-space>
-    <router-view tableType='test' @save='log' :BatchNum="BatchNum" :newSwitch="newSwitch" :filterData='filterData' :cleanNum="cleanNum"/>
+    <router-view 
+      :visible='visible' 
+      @visibleClose='visibleClose'
+      :selectDate='selectDate'
+      tableType='test' 
+      @save='log' 
+      :BatchNum="BatchNum" 
+      :newSwitch="newSwitch" 
+      :filterData='filterData' 
+      :cleanNum="cleanNum"/>
   </a-layout-content>
 </template>
 
@@ -107,15 +116,24 @@ export default {
       isShow: false,
       filterData: {},
       cleanNum: 0,
-      isProjectStatus: false
+      isProjectStatus: false,
+      visible: false,
+      selectDate: ''
     }
   },    
   methods:{
     profileDetail(type){
         this.$router.push({path:'/hrManageTable/' + type})
     },
+    showDrawer() {
+      this.visible = true;
+    },
+    visibleClose () {
+      this.visible = false;
+    },
     onChange2(date, dateString) {
-      console.log(date, dateString);
+      this.selectDate = dateString.substring(0,4) + dateString.substring(5,7)
+      console.log(this.selectDate);
     },
     refresh(){
       window.scrollTo(0,0);

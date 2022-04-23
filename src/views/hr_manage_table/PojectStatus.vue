@@ -1,9 +1,24 @@
 <template>
   <div>
     <div v-show="isBatchControl || isBatchControl2" @click="close" class="maskLayer"></div>
+    <a-drawer
+      title="图表总览"
+      placement="right"
+      :closable="false"
+      :visible="visible"
+      :after-visible-change="afterVisibleChange"
+      @close="onClose"
+      width='900px'
+    >
+    <el-scrollbar style="height:100%">
+      <chart title="海思半导体PDU需求" keyId="chart1" :series="[series1A, series2A, series3A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
+      <chart title="上海海思PDU需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
+      <chart title="地域需求" keyId="chart3" :series="[series1C, series2C, series3C]" :xAxis="[xDataC]" :yAxis="[yData1C, yData2C]" :titleData="titleData"/>
+    </el-scrollbar>
+    </a-drawer>
     <batch-input batchType='ProjectStatusInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
     <batch-output batchType='ProjectStatusInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
-    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 70 }"  :scroll="{ x: 1500, y: 550 }">
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 70 }"  :scroll="{ x: 1500, y: 500 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -212,7 +227,8 @@ const columns = [
 ];
 
 const data = [];
-import * as request from "../../network/request"
+import * as request from "@/network/request"
+import Chart from '@/components/Chart.vue';
 for (let i = 0; i < 100; i++) {
   data.push({
     key: i.toString(),
@@ -223,10 +239,17 @@ for (let i = 0; i < 100; i++) {
   });
 }
 export default {
-  components: { BatchInput, BatchOutput },
+  components: { BatchInput, BatchOutput, Chart },
   props: {
     BatchNum: {
       type: Number
+    },
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    selectDate: {
+      type: String
     }
   },
   data() {
@@ -241,7 +264,182 @@ export default {
       searchInput: null,
       searchedColumn: '',
       isBatchControl: false,
-      isBatchControl2: false
+      isBatchControl2: false,
+      titleData: ['需求总数', '月度满足数', '需求满足度'],
+			xDataA: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				}
+			},
+			xDataB: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				}
+			},
+			xDataC: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				}
+			},
+			yData1A: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 5,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2A: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 100,
+				interval: 5,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			yData1B: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 5,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2B: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 100,
+				interval: 5,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			yData1C: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 5,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2C: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 100,
+				interval: 5,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			series1A: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2A: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3A: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			},
+			series1B: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2B: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3B: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			},
+			series1C: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2C: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3C: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			}
     };
   },
   methods: {
@@ -252,6 +450,15 @@ export default {
         target[column] = value;
         this.data = newData;
       }
+    },
+    afterVisibleChange(val) {
+      console.log('visible', val);
+    },
+    showDrawer() {
+      // this.visible = true;
+    },
+    onClose() {
+      this.$emit('visibleClose')
     },
     edit(key) {
       const newData = [...this.data];
@@ -320,21 +527,85 @@ export default {
         console.log(err);
       })
     },
+    getPduList (xData, department) {
+      request.request({
+      url: this.getBaseUrl() + 'get_pdu_list/',
+      method: 'post',
+      data: {department: department}
+      }).then(res =>{
+        xData.data = res.data.pduList
+        console.log(res);
+      }).catch(err =>{
+        console.log(err);
+      })
+    },
     getProjectStatusInfo () {
+      this.cacheData = []
+      this.data = []
       request.request({
       url: this.getBaseUrl() + 'get_project_status_info/',
       method: 'post',
       data: {
-        filterData: this.filterData,
-        filterRegion: this.$cookies.get("region")
+        selectDate: this.selectDate,
+        filterRegion: this.$cookies.get("region"),
       }
       }).then(res =>{
+        this.cacheData = []
         let a = res.data.infoList
-        this.data.length = 0
-        for (let i = 0; i < a.length; i++) {
-          this.data.push(a[i]);
+        if (this.selectDate==='') {
+          this.data.length = 0
+          for (let i = 0; i < a.length; i++) {
+            this.data.push(a[i]);
+          }
+          this.cacheData = data.map(item => ({ ...item }));
+        } else {
+        // console.log(this.data);
+          let xDataA = []
+          let yData1A = []
+          let yData2A = []
+          let yLineA = []
+          let xDataB = []
+          let yData1B = []
+          let yData2B = []
+          let yLineB = []
+          let xDataC = []
+          let yData1C = []
+          let yData2C = []
+          let yLineC = []
+          this.data.length = 0
+          a.forEach(e => {
+            this.data.push(e)
+            this.cacheData = data.map(item => ({ ...item }));
+            xDataC.push(e.pdu + '/'  + e.region)
+            yData1C.push(e.project_num_all)
+            yData2C.push(e.monthly_target_reach)
+            yLineC.push(e.project_satisfaction)
+            if (e.department==='海思半导体') {
+              xDataA.push(e.pdu)
+              yData1A.push(e.project_num_all)
+              yData2A.push(e.monthly_target_reach)
+              yLineA.push(e.project_satisfaction)
+            }
+            if (e.department==='上海海思') {
+              xDataB.push(e.pdu)
+              yData1B.push(e.project_num_all)
+              yData2B.push(e.monthly_target_reach)
+              yLineB.push(e.project_satisfaction)
+            }
+          });
+          this.xDataA.data = xDataA
+          this.xDataB.data = xDataB
+          this.xDataC.data = xDataC
+          this.series1A.data = yData1A
+          this.series2A.data = yData2A
+          this.series3A.data = yLineA
+          this.series1B.data = yData1B
+          this.series2B.data = yData2B
+          this.series3B.data = yLineB
+          this.series1C.data = yData1C
+          this.series2C.data = yData2C
+          this.series3C.data = yLineC
         }
-        this.cacheData = data.map(item => ({ ...item }));
       }).catch(err =>{
         console.log(err);
       })
@@ -346,6 +617,7 @@ export default {
   },
   created () {
     this.getProjectStatusInfo()
+    // this.getPduList(this.xData, '海思半导体')
   },
   watch: {
     BatchNum: {
@@ -365,6 +637,13 @@ export default {
         console.log(newValue)
         console.log(oldValue)
         this.isBatchControl = true
+      }
+    },
+    selectDate: {
+      handler: function (newValue, oldValue) {
+        console.log(newValue)
+        console.log(oldValue)
+        this.getProjectStatusInfo()
       }
     }
   }

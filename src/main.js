@@ -15,6 +15,9 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import  * as  echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
 
 Vue.use(VueQuillEditor, /* { default global options } */)
 
