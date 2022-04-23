@@ -33,7 +33,7 @@
             <a-menu-item key="2" @click="showTopMenu2">
               项目管理
             </a-menu-item>
-            <a-menu-item key="3">
+            <a-menu-item key="3" @click="showTopMenu3">
               运营管理
             </a-menu-item>
         </a-menu>
@@ -49,7 +49,13 @@
             <a-space :size="200" style="margin-left:10%">
                 <a @click="jumpPath2('pduinfo')"><h5>PDU信息</h5></a>
                 <a @click="jumpPath2('ProjectInfo')"><h5>项目信息</h5></a>
+                <a @click="jumpPath2('PoInfo')"><h5>PO信息</h5></a>
             </a-space>
+        </div>
+        <div class="topMenu" v-show="isShow3" @mouseleave="close">
+          <a-space :size="200" style="margin-left:10%">
+              <a @click="jumpPath3('PoList')"><h5>PO运营</h5></a> 
+          </a-space>
         </div>
     </a-layout-header>
 </template>
@@ -61,7 +67,8 @@
         isShow: false,
         nickname: '用户名',
         count: 0,
-        isShow2: false
+        isShow2: false,
+        isShow3: false
       }
     },
     methods: {
@@ -73,9 +80,14 @@
           this.close()
           this.isShow2 = true 
         },
+        showTopMenu3() {
+          this.close()
+          this.isShow3 = true
+        },
         close () {
           this.isShow = false
           this.isShow2 = false
+          this.isShow3 = false
         },
         jumpPath(value){
           this.$router.push({path:'/hrManageTable/' + value})
@@ -84,6 +96,10 @@
         jumpPath2(value){
           this.$router.push({path:'/projectManager/' + value})
           this.close()
+        },
+         jumpPath3(value){
+            this.$router.push({path:'/businessManager/' + value})
+            this.close()
         },
         add () {
           this.count += 1

@@ -7,11 +7,14 @@ import VueRouter from 'vue-router'
 const Applicant = () => import('../views/hr_manage_table/Applicant')
 const CommonTable = () => import('@/components/CommonTable.vue')
 const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
+const BusinessManager = () => import('../views/business_manager/BusinessManager')
 const ProjectManager = () => import('../views/project_manager/ProjectManger')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
 const pduinfo = () => import('../views/project_manager/PduInfo')
 const ProjectInfo = () => import('../views/project_manager/ProjectInfo')
+const PoInfo = () => import('../views/project_manager/PoInfo')
+const PoList = () => import('../views/business_manager/PoList')
 const ClockIn = () => import('../views/clockIn/ClockIn.vue')
 const Diary = () => import('../views/diary/Diary')
 const Difficulty = () => import('../views/difficulty/Difficulty')
@@ -83,6 +86,29 @@ const routes = [
             path: 'projectInfo',
             name: 'ProjectInfo',
             component: ProjectInfo,
+          },
+          {
+            path: 'PoInfo',
+            name: 'PoInfo',
+            component: PoInfo,
+          },
+          {
+            path: 'commonTable',
+            name: 'CommonTable',
+            component: CommonTable,
+          }
+        ]
+      },
+      {
+        path: '/businessManager',
+        name: 'BusinessManager',
+        component: BusinessManager,
+        redirect:'/businessManager/PoList',
+        children: [
+          {
+            path: 'PoList',
+            name: 'PoList',
+            component: PoList,
           },
           {
             path: 'commonTable',
