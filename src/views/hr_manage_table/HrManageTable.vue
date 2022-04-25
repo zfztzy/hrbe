@@ -149,12 +149,12 @@ export default {
       this.newSwitch += 1
     },
     switchTable () {
-      if (this.$route.name==='Applicant') {
+      if (this.$route.name==='applicant') {
         this.isShow = true
       } else {
         this.isShow = false
       }
-      if (this.$route.name==='PojectStatus') {
+      if (this.$route.name==='pojectstatus') {
         this.isProjectStatus = true
       } else {
         this.isProjectStatus = false
@@ -210,10 +210,17 @@ export default {
     }
   },
   watch:{
-    '$route': 'refresh'
+    $route: {
+      handler () {
+        this.switchTable()
+        this.checkLogin()
+        this.refresh()
+      }
+    }
   },
   mounted () {
     this.switchTable()
+    this.checkLogin()
   }
 }
 

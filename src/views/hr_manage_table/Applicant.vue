@@ -463,12 +463,6 @@ const columns = [
     scopedSlots: { customRender: 'own_interview_results' },
   },
   {
-    title: '原因',
-    dataIndex: 'reason1',
-    width: 300,
-    scopedSlots: { customRender: 'reason1' },
-  },
-  {
     title: '软通面试时间',
     dataIndex: 'own_interview_time',
     width: 240,
@@ -533,6 +527,12 @@ const columns = [
     dataIndex: 'giveup_time',
     width: 240,
     scopedSlots: { customRender: 'giveup_time' },
+  },
+  {
+    title: '原因',
+    dataIndex: 'reason1',
+    width: 300,
+    scopedSlots: { customRender: 'reason1' },
   },
   {
     title: '入项结果',

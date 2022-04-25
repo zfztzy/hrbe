@@ -1,7 +1,7 @@
 <template>
   <a-layout style="height: 100%">
     <router-view/>
-    <Foot/>
+    <!-- <Foot/> -->
   </a-layout>
 </template>
 
@@ -9,17 +9,17 @@
 // @ is an alias to /src
 
 // import Topbanner from '@/components/banner/Topbanner'
-import Foot from '@/components/Foot'
+// import Foot from '@/components/Foot'
 // import Topbannerwinter from './components/Topbannerwinter.vue'
 import * as request from "@/network/request"
 
 
 export default {
   name: 'appHome',
-  components: {
-    Foot,
-    // Topbannerwinter,
-  },
+  // components: {
+  //   Foot,
+  //   // Topbannerwinter,
+  // },
   methods: {
     checkLogin () {
       request.request({

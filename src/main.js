@@ -16,6 +16,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import  * as  echarts from 'echarts'
+import * as request from "@/network/request"
 
 Vue.prototype.$echarts = echarts
 
@@ -46,3 +47,32 @@ Array.prototype.remove = function(from, to) {
   this.length = from < 0 ? this.length + from : from;
   return this.push.apply(this, rest);
 };
+
+Vue.prototype.checkLogin = function () {
+  request.request({
+    url: this.getBaseUrl() + 'login/',
+    method: 'post',
+    data: {
+      userInfo: {
+        user_name: this.$cookies.get("userName"),
+        password: this.$cookies.get("password")
+      }
+    }
+  }).then(res =>{
+    if (res.data.msg == 'pass'){
+      const routeName = this.$route.name
+      console.log(routeName);
+      if (res.data.limits[routeName]) {
+        console.log('pass');
+      } else {
+        alert('没有访问权限')
+        this.$router.push('/home')
+      }
+    } else {
+      alert(res.data.msg)
+      this.$router.push('/login')
+    }
+  }).catch(err =>{
+    console.log(err);
+  })
+}

@@ -13,7 +13,8 @@
     <el-scrollbar style="height:100%">
       <chart title="海思半导体PDU需求" keyId="chart1" :series="[series1A, series2A, series3A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
       <chart title="上海海思PDU需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
-      <chart title="地域需求" keyId="chart3" :series="[series1C, series2C, series3C]" :xAxis="[xDataC]" :yAxis="[yData1C, yData2C]" :titleData="titleData"/>
+      <chart title="海思半导体地域需求" keyId="chart3" :series="[series1C, series2C, series3C]" :xAxis="[xDataC]" :yAxis="[yData1C, yData2C]" :titleData="titleData"/>
+      <chart title="上海海思地域需求" keyId="chart4" :series="[series1D, series2D, series3D]" :xAxis="[xDataD]" :yAxis="[yData1D, yData2D]" :titleData="titleData"/>
     </el-scrollbar>
     </a-drawer>
     <batch-input batchType='ProjectStatusInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
@@ -72,7 +73,7 @@
         </template>
       </template>
       <template
-        v-for="col in ['sow_num', 'project_num', 'new_project_num', 
+        v-for="col in ['project', 'po_num', 'pdu', 'sow_num', 'project_num', 'new_project_num', 
         'offset_num', 'monthly_target', 'urgency', 'monthly_reach', 'remarks',]"
         :slot="col"
         slot-scope="text, record"
@@ -124,25 +125,63 @@ const columns = [
   {
     title: '部门',
     dataIndex: 'department',
-    width: 250,
-    scopedSlots: { customRender: 'department' },
+    width: 130,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'department',
+    },
+    onFilter: (value, record) =>
+      record.department
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: 'PDU',
     dataIndex: 'pdu',
-    width: 100,
-    scopedSlots: { customRender: 'pdu' },
+    width: 140,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'pdu',
+    },
+    onFilter: (value, record) =>
+      record.pdu
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
+  },
+  {
+    title: 'PO',
+    dataIndex: 'po_num',
+    width: 170,
+    scopedSlots: { customRender: 'po_num' },
   },
   {
     title: '项目',
     dataIndex: 'project',
-    width: 100,
+    width: 180,
     scopedSlots: { customRender: 'project' },
   },
   {
     title: '地域',
     dataIndex: 'region',
-    width: 250,
+    width: 70,
     scopedSlots: { customRender: 'region' },
   },
   {
@@ -271,28 +310,51 @@ export default {
 				data: [],
 				axisPointer: {
 					type: 'shadow'
-				}
+        },
+        // formatter:function(val){
+        //     return val.split("").join("\n");
+        // }
+        axisLabel: {
+        rotate: 50, //文字旋转
+        },
+
 			},
 			xDataB: {
 				type: 'category',
 				data: [],
 				axisPointer: {
 					type: 'shadow'
-				}
+				},
+        axisLabel: {
+        rotate: 50, //文字旋转
+        },
 			},
 			xDataC: {
 				type: 'category',
 				data: [],
 				axisPointer: {
 					type: 'shadow'
-				}
+				},
+        // axisLabel: {
+        // rotate: 50, //文字旋转
+        // },
+			},
+			xDataD: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				},
+        // axisLabel: {
+        // rotate: 50, //文字旋转
+        // },
 			},
 			yData1A: {
 				type: 'value',
 				name: '人数',
 				min: 0,
 				max: 50,
-				interval: 5,
+				interval: 3,
 				axisLabel: {
 					formatter: '{value} '
 				}
@@ -301,8 +363,8 @@ export default {
 				type: 'value',
 				name: '满足度',
 				min: 0,
-				max: 100,
-				interval: 5,
+				max: 150,
+				interval: 15,
 				axisLabel: {
 					formatter: '{value} %'
 				}
@@ -312,7 +374,7 @@ export default {
 				name: '人数',
 				min: 0,
 				max: 50,
-				interval: 5,
+				interval: 3,
 				axisLabel: {
 					formatter: '{value} '
 				}
@@ -321,8 +383,8 @@ export default {
 				type: 'value',
 				name: '满足度',
 				min: 0,
-				max: 100,
-				interval: 5,
+				max: 150,
+				interval: 15,
 				axisLabel: {
 					formatter: '{value} %'
 				}
@@ -332,7 +394,7 @@ export default {
 				name: '人数',
 				min: 0,
 				max: 50,
-				interval: 5,
+				interval: 3,
 				axisLabel: {
 					formatter: '{value} '
 				}
@@ -341,8 +403,28 @@ export default {
 				type: 'value',
 				name: '满足度',
 				min: 0,
-				max: 100,
-				interval: 5,
+				max: 150,
+				interval: 15,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			yData1D: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 3,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2D: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 150,
+				interval: 15,
 				axisLabel: {
 					formatter: '{value} %'
 				}
@@ -430,6 +512,37 @@ export default {
 				data: []
 			},
 			series3C: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			},
+			series1D: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2D: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3D: {
 				name: '需求满足度',
 				type: 'line',
 				yAxisIndex: 1,
@@ -552,60 +665,57 @@ export default {
       }).then(res =>{
         this.cacheData = []
         let a = res.data.infoList
-        if (this.selectDate==='') {
-          this.data.length = 0
-          for (let i = 0; i < a.length; i++) {
-            this.data.push(a[i]);
-          }
-          this.cacheData = data.map(item => ({ ...item }));
-        } else {
-        // console.log(this.data);
-          let xDataA = []
-          let yData1A = []
-          let yData2A = []
-          let yLineA = []
-          let xDataB = []
-          let yData1B = []
-          let yData2B = []
-          let yLineB = []
-          let xDataC = []
-          let yData1C = []
-          let yData2C = []
-          let yLineC = []
-          this.data.length = 0
-          a.forEach(e => {
-            this.data.push(e)
-            this.cacheData = data.map(item => ({ ...item }));
-            xDataC.push(e.pdu + '/'  + e.region)
-            yData1C.push(e.project_num_all)
-            yData2C.push(e.monthly_target_reach)
-            yLineC.push(e.project_satisfaction)
-            if (e.department==='海思半导体') {
-              xDataA.push(e.pdu)
-              yData1A.push(e.project_num_all)
-              yData2A.push(e.monthly_target_reach)
-              yLineA.push(e.project_satisfaction)
-            }
-            if (e.department==='上海海思') {
-              xDataB.push(e.pdu)
-              yData1B.push(e.project_num_all)
-              yData2B.push(e.monthly_target_reach)
-              yLineB.push(e.project_satisfaction)
-            }
-          });
-          this.xDataA.data = xDataA
-          this.xDataB.data = xDataB
-          this.xDataC.data = xDataC
-          this.series1A.data = yData1A
-          this.series2A.data = yData2A
-          this.series3A.data = yLineA
-          this.series1B.data = yData1B
-          this.series2B.data = yData2B
-          this.series3B.data = yLineB
-          this.series1C.data = yData1C
-          this.series2C.data = yData2C
-          this.series3C.data = yLineC
+        for (let i = 0; i < a.length; i++) {
+          this.data.push(a[i]);
         }
+        this.cacheData = data.map(item => ({ ...item }));
+      }).catch(err =>{
+        console.log(err);
+      })
+    },
+    getPicValue() {
+      request.request({
+      url: this.getBaseUrl() + 'get_status_pic_value/',
+      method: 'post',
+      data: {
+        selectDate: this.selectDate,
+        filterRegion: this.$cookies.get("region"),
+      }
+      }).then(res =>{
+        console.log(res.data.picData);
+        this.xDataA.data = res.data.picData['海思半导体pduXData']
+        this.xDataB.data = res.data.picData['上海海思pduXData']
+        this.xDataC.data = res.data.picData['海思半导体地域xData']
+        this.xDataD.data = res.data.picData['上海海思地域xData']
+        this.yData1A.max = Math.max(...res.data.picData['海思半导体pdu剩余需求数'])
+        this.yData1A.interval = parseInt(Math.max(...res.data.picData['海思半导体pdu剩余需求数'])/10)
+        this.yData2A.max = Math.max(...res.data.picData['海思半导体pdu月度满足度'])
+        this.yData2A.interval = parseInt(Math.max(...res.data.picData['海思半导体pdu月度满足度'])/10)
+        this.yData1B.max = Math.max(...res.data.picData['上海海思pdu剩余需求数'])
+        this.yData1B.interval = parseInt(Math.max(...res.data.picData['上海海思pdu剩余需求数'])/10)
+        this.yData2B.max = Math.max(...res.data.picData['上海海思pdu月度满足度'])
+        this.yData2B.interval = parseInt(Math.max(...res.data.picData['上海海思pdu月度满足度'])/10)
+        this.yData1C.max = Math.max(...res.data.picData['海思半导体pdu剩余需求数'])
+        this.yData1C.interval = parseInt(Math.max(...res.data.picData['海思半导体地域剩余需求数'])/10)
+        this.yData2C.max = Math.max(...res.data.picData['海思半导体地域月度满足度'])
+        this.yData2C.interval = parseInt(Math.max(...res.data.picData['海思半导体地域月度满足度'])/10)
+        this.yData1D.max = Math.max(...res.data.picData['上海海思地域剩余需求数'])
+        this.yData1D.interval = parseInt(Math.max(...res.data.picData['上海海思地域剩余需求数'])/10)
+        this.yData2D.max = Math.max(...res.data.picData['上海海思地域月度满足度'])
+        this.yData2D.interval = parseInt(Math.max(...res.data.picData['上海海思地域月度满足度'])/10)
+        this.series1A.data = res.data.picData['海思半导体pdu剩余需求数']
+        this.series2A.data = res.data.picData['海思半导体pdu月度满足数']
+        this.series3A.data = res.data.picData['海思半导体pdu月度满足度']
+        this.series1B.data = res.data.picData['上海海思pdu剩余需求数']
+        this.series2B.data = res.data.picData['上海海思pdu月度满足数']
+        this.series3B.data = res.data.picData['上海海思pdu月度满足度']
+        this.series1C.data = res.data.picData['海思半导体地域剩余需求数']
+        this.series2C.data = res.data.picData['海思半导体地域月度满足数']
+        this.series3C.data = res.data.picData['海思半导体地域月度满足度']
+        this.series1D.data = res.data.picData['上海海思地域剩余需求数']
+        this.series2D.data = res.data.picData['上海海思地域月度满足数']
+        this.series3D.data = res.data.picData['上海海思地域月度满足度']
+
       }).catch(err =>{
         console.log(err);
       })
@@ -617,6 +727,7 @@ export default {
   },
   created () {
     this.getProjectStatusInfo()
+    this.getPicValue()
     // this.getPduList(this.xData, '海思半导体')
   },
   watch: {
@@ -644,6 +755,7 @@ export default {
         console.log(newValue)
         console.log(oldValue)
         this.getProjectStatusInfo()
+        this.getPicValue()
       }
     }
   }

@@ -2,7 +2,7 @@
   <div>
 		<h1 @click="create">{{title}}</h1>
     <div class="Echarts">
-        <div :ref="keyId" style="width: 600px;height: 400px;"></div>
+        <div :ref="keyId" style="width: 800px;height: 400px;"></div>
     </div>
   </div>
 </template>

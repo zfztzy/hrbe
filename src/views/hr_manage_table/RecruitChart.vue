@@ -1,7 +1,38 @@
 <template>
-  <div>
-		<chart :series="[series1, series2, series3]" :xAxis="[xData]" :yAxis="[yData1, yData2]" :titleData="titleData"/>
-  </div>
+	<div>
+		<a-range-picker
+			style=" margin-left: 20px; "
+			key="aa"
+			format="YYYY-MM-DD"
+			:placeholder="['开始时间', '结束时间']"
+			@change="onChange"
+			@ok="onOk"
+		/>
+		<a-select
+			ref="select"
+			style="margin: -5px 0; width:250px"
+			:value="text"
+			@change="e => handleChange(e, record.key, col)"
+			placeholder="维度选择"
+		>
+			<a-select-option key="key1" value='key1'>pdu维度</a-select-option>
+			<a-select-option key="key2" value='key2'>地域维度</a-select-option>
+		</a-select>
+		<a-select
+			ref="select"
+			style="margin: -5px 0; width:250px"
+			:value="text"
+			@change="e => handleChange(e, record.key, col)"
+			placeholder="部门选择"
+		>
+			<a-select-option key="key1" value='key1'>上海海思</a-select-option>
+			<a-select-option key="key2" value='key2'>海思半导体</a-select-option>
+		</a-select>
+
+		<div class="midPic">
+			<chart keyId="chart1" :series="[series1, series2, series3]" :xAxis="[xData]" :yAxis="[yData1, yData2]" :titleData="titleData"/>
+		</div>
+	</div>
 </template>
  
 <script>
@@ -82,5 +113,9 @@ export default {
 </script>
  
 <style>
- 
+.midPic{
+	position: absolute;
+	top: 30%;
+	left: 30%;
+}
 </style>

@@ -1,19 +1,38 @@
 <template>
   <div>
-    <a-date-picker @change="onChange" />
-    <br />
-    <a-month-picker placeholder="Select month" @change="onChange" />
-    <br />
-    <a-range-picker @change="onChange" />
-    <br />
-    <a-week-picker placeholder="Select week" @change="onChange" />
+    <a-button type="primary" @click="showDrawer">
+      Open
+    </a-button>
+    <a-drawer
+      title="Basic Drawer"
+      placement="right"
+      :closable="false"
+      :visible="visible"
+      :after-visible-change="afterVisibleChange"
+      @close="onClose"
+    >
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </a-drawer>
   </div>
 </template>
 <script>
 export default {
+  data() {
+    return {
+      visible: false,
+    };
+  },
   methods: {
-    onChange(date, dateString) {
-      console.log(date, dateString);
+    afterVisibleChange(val) {
+      console.log('visible', val);
+    },
+    showDrawer() {
+      this.visible = true;
+    },
+    onClose() {
+      this.visible = false;
     },
   },
 };

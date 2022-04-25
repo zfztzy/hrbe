@@ -26,6 +26,7 @@ const Studyparagraph = ()  => import('../views/study/Studyparagraph')
 const Studyleetcode = ()  => import('../views/study/Studyleetcode')
 const Studyparagraphlist = ()  => import('../views/study/Studyparagraphlist')
 const AppHome = ()  => import('../views/AppHome.vue')
+const HomeMenu = ()  => import('../views/HomeMenu.vue')
 const LoginView = ()  => import('../views/LoginView.vue')
 // const Studyhome = ()  => import('../views/study/Studyhome')
 
@@ -36,14 +37,8 @@ const routes = [
     path:'/',
     name:'appHome',
     component: AppHome,
-    redirect:'/hrManageTable/applicant',
+    redirect:'/home',
     children: [
-      {
-        path:'/hrManageTable',
-        name:'home',
-        component: HrManageTable,
-        redirect:'/hrManageTable/applicant',
-      },
       {
         path: '/hrManageTable',
         name: 'HrManageTable',
@@ -52,29 +47,29 @@ const routes = [
         children: [
           {
             path: 'applicant',
-            name: 'Applicant',
+            name: 'applicant',
             component: Applicant,
           },
           {
             path: 'recruitment',
-            name: 'Recruitment',
+            name: 'recruitment',
             component: Recruitment,
           },
           {
             path: 'pojectStatus',
-            name: 'PojectStatus',
+            name: 'pojectstatus',
             component: PojectStatus,
           },
           {
             path: 'RecruitChart',
-            name: 'RecruitChart',
+            name: 'recruitchart',
             component: RecruitChart,
           }
         ]
       },
       {
         path: '/projectManager',
-        name: 'ProjectManager',
+        name: 'projectmanager',
         component: ProjectManager,
         redirect:'/hrManageTable/projectInfo',
         children: [  
@@ -85,12 +80,12 @@ const routes = [
           },
           {
             path: 'projectInfo',
-            name: 'ProjectInfo',
+            name: 'projectinfo',
             component: ProjectInfo,
           },
           {
             path: 'PoInfo',
-            name: 'PoInfo',
+            name: 'poinfo',
             component: PoInfo,
           }
         ]
@@ -168,7 +163,12 @@ const routes = [
     path: '/login',
     name: 'LoginView',
     component: LoginView
-  }
+  },
+  {
+    path:'/home',
+    name:'home',
+    component: HomeMenu
+  },
 ]
 
 const router = new VueRouter({

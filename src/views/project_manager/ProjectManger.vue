@@ -191,10 +191,16 @@ export default {
     }
   },
   watch:{
-    '$route': 'refresh'
+    $route: {
+      handler () {
+        this.checkLogin()
+        this.refresh()
+      }
+    }
   },
   mounted () {
     this.switchTable()
+    this.checkLogin()
   }
 }
 

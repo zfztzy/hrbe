@@ -227,6 +227,13 @@ const columns = [
     }
   },
   {
+    title: '提出人',
+    dataIndex: 'proposer',
+    fixed: 'left',
+    width: 150,
+    scopedSlots: { customRender: 'proposer' },
+  },
+  {
     title: '岗位方向',
     dataIndex: 'position_attribute',
     width: 250,
@@ -327,12 +334,6 @@ const columns = [
     dataIndex: 'proposed_time',
     width: 200,
     scopedSlots: { customRender: 'proposed_time' },
-  },
-  {
-    title: '提出人',
-    dataIndex: 'proposer',
-    width: 150,
-    scopedSlots: { customRender: 'proposer' },
   },
   {
     title: '希望到刚时间',
