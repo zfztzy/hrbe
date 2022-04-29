@@ -79,12 +79,21 @@
         slot-scope="text, record"
       >
         <div :key="col">
-          <a-input
-            v-if="record.editable"
-            style="margin: -5px 0"
-            :value="text"
-            @change="e => handleChange(e.target.value, record.key, col)"
-          />
+          <template v-if="record.editable">
+            <a-input
+              v-if="col=='monthly_target' & date3 > 4 & record.date == '202204'"
+              style="margin: -5px 0"
+              :disabled='date3 > 4'
+              :value="text"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+            <a-input
+              v-else
+              style="margin: -5px 0"
+              :value="text"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+          </template>
           <template v-else>
             {{ text }}
           </template>
@@ -305,6 +314,9 @@ export default {
       isBatchControl: false,
       isBatchControl2: false,
       titleData: ['需求总数', '月度满足数', '需求满足度'],
+      date1: '',
+      date2: '',
+      date3: '',
 			xDataA: {
 				type: 'category',
 				data: [],
@@ -729,6 +741,14 @@ export default {
     this.getProjectStatusInfo()
     this.getPicValue()
     // this.getPduList(this.xData, '海思半导体')
+    let todayDate = new Date();
+    console.log(todayDate.toLocaleDateString().replace(/\//g, '-').replace(/-(\d)\b/g, '-0$1'));
+    this.date2 = todayDate.getMonth()
+    this.date3 = todayDate.getDate()
+    console.log(this.date1);
+    console.log(this.date2);
+    console.log(this.date3);
+
   },
   watch: {
     BatchNum: {

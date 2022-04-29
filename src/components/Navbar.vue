@@ -90,16 +90,19 @@
           this.isShow3 = false
         },
         jumpPath(value){
+          this.checkLogin()
           this.$router.push({path:'/hrManageTable/' + value})
           this.close()
         },
         jumpPath2(value){
+          this.checkLogin()
           this.$router.push({path:'/projectManager/' + value})
           this.close()
         },
          jumpPath3(value){
-            this.$router.push({path:'/businessManager/' + value})
-            this.close()
+          this.checkLogin()
+          this.$router.push({path:'/businessManager/' + value})
+          this.close()
         },
         add () {
           this.count += 1

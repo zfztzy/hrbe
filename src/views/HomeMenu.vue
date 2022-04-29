@@ -12,7 +12,6 @@ import Navbar from '../components/Navbar.vue'
 import Foot from '../components/Foot.vue'
 export default {
   components: { Topbanner2, Foot, Navbar },
-
 }
 </script>
 

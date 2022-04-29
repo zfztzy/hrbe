@@ -213,14 +213,14 @@ export default {
     $route: {
       handler () {
         this.switchTable()
-        this.checkLogin()
+        // this.checkLogin()
         this.refresh()
       }
     }
   },
   mounted () {
     this.switchTable()
-    this.checkLogin()
+    // this.checkLogin()
   }
 }
 

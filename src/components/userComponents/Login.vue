@@ -56,7 +56,7 @@ export default {
           this.$cookies.set("region", res.data.region + '',60 * 60 * 1)
           this.$cookies.set("level", res.data.level + '',60 * 60 * 1)
           console.log(this.$cookies.get("nickname"))
-          this.$router.push('/hrManageTable/applicant')
+          this.$router.push('/home')
         } else {
           alert(res.data.msg)
         }
