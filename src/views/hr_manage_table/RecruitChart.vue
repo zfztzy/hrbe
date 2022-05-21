@@ -107,6 +107,9 @@ export default {
 				data: [],
 				axisPointer: {
 					type: 'shadow'
+				},
+				axisLabel: {
+					rotate: 50, //文字旋转
 				}
 			},
 			yData1: {

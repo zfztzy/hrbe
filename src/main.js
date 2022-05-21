@@ -40,6 +40,7 @@ new Vue({
 
 Vue.prototype.getBaseUrl = function (){//changeData是函数名
   return 'http://139.9.160.24/'
+  // return 'http://119.3.185.226/'
 }
 
 Array.prototype.remove = function(from, to) {

@@ -60,7 +60,7 @@
         </template>
       </template>
       <template
-        v-for="col in ['internal_id', 'department', 'pdu', 'project', 
+        v-for="col in ['internal_id', 'department', 'type2', 'pdu', 'project', 
         'position_attribute', 'skill_keyword', 'requirements', 'working_seniority', 
         'proposed_time', 'proposer', 'arrival_time', 'num', 
         'recruiter', 'project_leader', 'region', 'location', 
@@ -103,8 +103,26 @@
               overflow: hidden;">查看</a>
             </template>
             <template v-else-if="col=='proposed_time'" >
-              {{ text | datetime}}
+              <a-date-picker
+                placeholder="提出时间"
+                style="margin: -5px 0"
+                @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
             </template>
+            <template v-else-if="col=='arrival_time'" >
+              <a-date-picker
+                placeholder="希望到岗时间"
+                style="margin: -5px 0"
+                @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            </template>
+            <a-select
+              v-else-if="col=='position_attribute'" 
+              ref="select"
+              style="margin: -5px 0; width: 122px"
+              :value="text"
+              @change="e => handleChange(e, record.key, col)"
+            >
+              <a-select-option v-for="job in jobList" :key="job" :value='job'>{{job}}</a-select-option>
+            </a-select>
             <a-input
               v-else
               style="margin: -5px 0"
@@ -121,12 +139,17 @@
               overflow: hidden;">查看</a>
             </template>
             <template v-else-if="col=='proposed_time'" >
-              {{ text | datetime}}
+              {{ text | date}}
+            </template>
+            <template v-else-if="col=='arrival_time'" >
+              {{ text | date}}
             </template>
             <template v-else>
               <a-popover :title="'总数:' + record.total" @mouseenter="getNum(record)">
                 <template #content>
                   <p>已入职:{{record.done}}</p>
+                  <p>待入职:{{record.standBy}}</p>
+                  <p>谈offer中:{{record.discuss}}</p>
                   <p>流程中:{{record.filtering}}</p>
                   <p>不通过:{{record.fail}}</p>
                   <p>拒绝:{{record.giveUp}}</p>
@@ -157,6 +180,13 @@
 import BatchInput from '@/components/batchControl/BatchInput.vue';
 import BatchOutput from '@/components/batchControl/BatchOutput.vue';
 const columns = [
+  {
+    title: '序号',
+    dataIndex: 'key',
+    width: 70,
+    fixed: 'left',
+    scopedSlots: { customRender: 'key' },
+  },
   {
     title: '部门',
     dataIndex: 'department',
@@ -236,7 +266,7 @@ const columns = [
   {
     title: '岗位方向',
     dataIndex: 'position_attribute',
-    width: 250,
+    width: 150,
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -255,14 +285,14 @@ const columns = [
       }
     }
   },
-  {
-    title: '关键字段',
-    dataIndex: 'skill_keyword',
-    width: 200,
-    scopedSlots: {
-      customRender: 'skill_keyword' 
-    }
-  },
+  // {
+  //   title: '关键字段',
+  //   dataIndex: 'skill_keyword',
+  //   width: 200,
+  //   scopedSlots: {
+  //     customRender: 'skill_keyword' 
+  //   }
+  // },
   {
     title: '地域',
     dataIndex: 'region',
@@ -336,7 +366,7 @@ const columns = [
     scopedSlots: { customRender: 'proposed_time' },
   },
   {
-    title: '希望到刚时间',
+    title: '希望到岗时间',
     dataIndex: 'arrival_time',
     width: 120,
     scopedSlots: { customRender: 'arrival_time' },
@@ -382,10 +412,10 @@ const columns = [
     scopedSlots: { customRender: 'urgency' },
   },
   {
-    title: '需求类型',
-    dataIndex: 'type',
-    width: 100,
-    scopedSlots: { customRender: 'type' },
+    title: '工作地点',
+    dataIndex: 'location',
+    width: 210,
+    scopedSlots: { customRender: 'location' },
   },
   {
     title: '计面官',
@@ -471,7 +501,8 @@ export default {
       model: {},
       editing: false,
       title: '',
-      baseUrl: ''
+      baseUrl: '',
+      jobList: ['C/C++开发','JAVA开发','PYTHON开发','WEB开发','自动化测试','芯片测试','手动测试','软件开发测试','硬件开发','硬件测试','硬件维护','软件维护','BA','资料','标注','大数据','运维','C#开发','图像测试','CAD开发','IC验证','结构工程师','物料岗位','帆软开发工程师','热设计工程师','芯片验证','PQ','自动化电气工程师','其他']
     };
   },
   methods: {
@@ -539,6 +570,8 @@ export default {
               i.filtering = res.data.filtering
               i.giveUp = res.data.giveUp
               i.done = res.data.done
+              i.discuss = res.data.discuss
+              i.standBy = res.data.standBy
               console.log(i);
               const newData = [...this.data];
               this.data = newData;

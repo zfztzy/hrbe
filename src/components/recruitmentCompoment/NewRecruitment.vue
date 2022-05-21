@@ -18,11 +18,19 @@
             <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
           </a-tooltip>
         </a-input>
-        <a-input v-model="position_attribute" placeholder="岗位方向" style="margin:20px; width: 400px">
+        <!-- <a-input v-model="position_attribute" placeholder="岗位方向" style="margin:20px; width: 400px">
           <a-tooltip slot="suffix" title="Extra information">
             <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
           </a-tooltip>
-        </a-input>
+        </a-input> -->
+        <a-select
+          v-model="position_attribute"
+          placeholder="岗位方向"
+          ref="select"
+          style="margin:20px; width: 400px"
+        >
+          <a-select-option v-for="job in jobList" :key="job" :value='job'>{{job}}</a-select-option>
+        </a-select>
         <a-input v-model="region" placeholder="地域" style="margin:20px; width: 400px">
           <a-tooltip slot="suffix" title="Extra information">
             <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
@@ -84,7 +92,9 @@ export default {
       num: undefined,
       recruiter: undefined,
       isSelectRelatedId: false,
-      isHtml5Editor: false
+      isHtml5Editor: false,
+      jobList: ['C/C++开发','JAVA开发','PYTHON开发','WEB开发','自动化测试','芯片测试','手动测试','软件开发测试','硬件开发','硬件测试','硬件维护','软件维护','BA','资料','标注','大数据','运维','C#开发','图像测试','CAD开发','IC验证','结构工程师','其他']
+ 
     }
   },
   methods: {

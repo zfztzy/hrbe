@@ -144,11 +144,21 @@
             <a-select
               v-else-if="col=='process_status'" 
               ref="select"
-              style="margin: -5px 0"
+              style="margin: -5px 0; width: 122px"
               :value="text"
               @change="e => handleChange(e, record.key, col)"
             >
-              <a-select-option v-for="(value,key) in process_status_case" :key="key" :value='key'>{{value}}</a-select-option>
+              <a-select-option v-for="(value,key) in process_status_case" :key="key" :value='value'>{{value}}</a-select-option>
+            </a-select>
+            <a-select
+              v-else-if="col=='resume_status'" 
+              ref="select"
+              style="margin: -5px 0; width: 82px"
+              :value="text"
+              @change="e => handleChange(e, record.key, col)"
+            >
+              <a-select-option key="open" value='open'>open</a-select-option>
+              <a-select-option key="close" value='close'>close</a-select-option>
             </a-select>
             <a-input
               v-else
@@ -171,7 +181,7 @@
               <template v-else-if="col=='giveup_time'||col=='final_time'||col=='graduation'||col=='entrance'||col=='arrival_time'">
                 {{ text | date}}
               </template><template v-else-if="col=='process_status'">
-                {{ process_status_case[text] }}
+                {{ text }}
               </template>
               <template v-else>
                 {{ text }}
@@ -227,7 +237,7 @@ const columns = [
   {
     title: '流程状态',
     dataIndex: 'process_status',
-    width: 130,
+    width: 160,
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -523,18 +533,6 @@ const columns = [
     scopedSlots: { customRender: 'hw_interview_time2' },
   },
   {
-    title: '放弃offer时间',
-    dataIndex: 'giveup_time',
-    width: 240,
-    scopedSlots: { customRender: 'giveup_time' },
-  },
-  {
-    title: '原因',
-    dataIndex: 'reason1',
-    width: 300,
-    scopedSlots: { customRender: 'reason1' },
-  },
-  {
     title: '入项结果',
     dataIndex: 'final_result',
     width: 150,
@@ -545,6 +543,18 @@ const columns = [
     dataIndex: 'final_time',
     width: 240,
     scopedSlots: { customRender: 'final_time' },
+  },
+  {
+    title: '放弃offer时间',
+    dataIndex: 'giveup_time',
+    width: 240,
+    scopedSlots: { customRender: 'giveup_time' },
+  },
+  {
+    title: '原因（各阶段评价）',
+    dataIndex: 'reason1',
+    width: 300,
+    scopedSlots: { customRender: 'reason1' },
   },
   {
     title: 'operation',
@@ -805,9 +815,7 @@ export default {
       console.log(text)
       return text + ' '
     }
-
   }
-
 };
 </script>
 <style scoped>

@@ -118,7 +118,7 @@ export default {
       cleanNum: 0,
       isProjectStatus: false,
       visible: false,
-      selectDate: ''
+      selectDate: undefined
     }
   },    
   methods:{
@@ -220,6 +220,9 @@ export default {
   },
   mounted () {
     this.switchTable()
+    // let todayDate = new Date();
+    // const date = todayDate.toLocaleDateString().replace(/\//g, '').replace(/-(\d)\b/g, '-0$1')
+    // this.selectDate = date
     // this.checkLogin()
   }
 }

@@ -98,7 +98,7 @@ const routes = [
         children: [
           {
             path: 'PoList',
-            name: 'PoList',
+            name: 'polist',
             component: PoList,
           },
           {

@@ -44,6 +44,9 @@ export default {
   props: {
     batchType: {
       type: String
+    },
+    selectDate: {
+      type: String
     }
   },
   data() {
@@ -67,11 +70,15 @@ export default {
       })
     },
     newDownloadExcel() {
-      console.log(this);
+      console.log(this.selectDate);
       request.request({
       url: this.getBaseUrl() + 'new_download_excel/',
       method: 'post',
-      data: {batchType: this.batchType},
+      data: {
+        batchType: this.batchType,
+        filterRegion: this.$cookies.get("region"),
+        selectDate: this.selectDate
+      },
       headers: { "Content-Type": "multipart/form-data" }
       }).then(res =>{
         this.fileList.unshift(res.data.fileInfo)

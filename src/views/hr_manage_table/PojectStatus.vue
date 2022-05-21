@@ -18,7 +18,7 @@
     </el-scrollbar>
     </a-drawer>
     <batch-input batchType='ProjectStatusInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
-    <batch-output batchType='ProjectStatusInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
+    <batch-output batchType='ProjectStatusInfo' :selectDate='selectDate' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
     <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 70 }"  :scroll="{ x: 1500, y: 500 }">
       <div
         slot="filterDropdown"
@@ -73,8 +73,7 @@
         </template>
       </template>
       <template
-        v-for="col in ['project', 'po_num', 'pdu', 'sow_num', 'project_num', 'new_project_num', 
-        'offset_num', 'monthly_target', 'urgency', 'monthly_reach', 'remarks',]"
+        v-for="col in colList"
         :slot="col"
         slot-scope="text, record"
       >
@@ -190,8 +189,24 @@ const columns = [
   {
     title: '地域',
     dataIndex: 'region',
-    width: 70,
-    scopedSlots: { customRender: 'region' },
+    width: 100,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'region',
+    },
+    onFilter: (value, record) =>
+      record.region
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: 'sow人力',
@@ -459,7 +474,7 @@ export default {
 						return value + '人';
 					}
 				},
-				data: []
+        data: [],
 			},
 			series3A: {
 				name: '需求满足度',
@@ -564,7 +579,9 @@ export default {
 					}
 				},
 				data: []
-			}
+      },
+      colList: ['project', 'po_num', 'pdu', 'sow_num', 'project_num', 'new_project_num', 
+      'offset_num', 'urgency', 'monthly_reach', 'remarks', 'monthly_target']
     };
   },
   methods: {
@@ -667,6 +684,7 @@ export default {
     getProjectStatusInfo () {
       this.cacheData = []
       this.data = []
+      console.log(this.selectDate)
       request.request({
       url: this.getBaseUrl() + 'get_project_status_info/',
       method: 'post',
@@ -680,7 +698,19 @@ export default {
         for (let i = 0; i < a.length; i++) {
           this.data.push(a[i]);
         }
-        this.cacheData = data.map(item => ({ ...item }));
+        this.cacheData = this.data.map(item => ({ ...item }));
+        let b = res.data.remove
+        if (b) {
+          if(this.colList.length === 11){
+            this.colList.pop()
+            console.log(this.colList);
+          }
+        } else {
+          if(this.colList.length < 11){
+            this.colList.push('monthly_target')
+            console.log(this.colList);
+          }
+        }
       }).catch(err =>{
         console.log(err);
       })

@@ -23,11 +23,12 @@ export default {
   methods: {
   },
   created () {
+    this.checkLogin()
   },
   watch: {
     $route: {
       handler () {
-        // this.checkLogin()
+        this.checkLogin()
       }
     }
   }

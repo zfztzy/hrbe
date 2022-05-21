@@ -62,8 +62,8 @@
                 label="岗位">
                 </el-table-column>
                 <el-table-column
-                prop="skill_keyword"
-                label="关键字">
+                prop="proposer"
+                label="提出人">
                 </el-table-column>
                 <el-table-column
                 prop="region"
