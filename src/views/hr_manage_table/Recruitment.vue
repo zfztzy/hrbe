@@ -60,7 +60,7 @@
         </template>
       </template>
       <template
-        v-for="col in ['internal_id', 'department', 'type2', 'pdu', 'project', 
+        v-for="col in ['internal_id', 'department', 'omptype', 'type2', 'pdu', 'project', 
         'position_attribute', 'skill_keyword', 'requirements', 'working_seniority', 
         'proposed_time', 'proposer', 'arrival_time', 'num', 
         'recruiter', 'project_leader', 'region', 'location', 
@@ -122,6 +122,33 @@
               @change="e => handleChange(e, record.key, col)"
             >
               <a-select-option v-for="job in jobList" :key="job" :value='job'>{{job}}</a-select-option>
+            </a-select>
+            <a-select
+              v-else-if="col=='urgency'" 
+              ref="select"
+              style="margin: -5px 0; width: 122px"
+              :value="text"
+              @change="e => handleChange(e, record.key, col)"
+            >
+              <a-select-option v-for="urgency in urgencyList" :key="urgency" :value='urgency'>{{urgency}}</a-select-option>
+            </a-select>
+            <a-select
+              v-else-if="col=='type2'" 
+              ref="select"
+              style="margin: -5px 0; width: 122px"
+              :value="text"
+              @change="e => handleChange(e, record.key, col)"
+            >
+              <a-select-option v-for="type in typeList" :key="type" :value='type'>{{type}}</a-select-option>
+            </a-select>
+            <a-select
+              v-else-if="col=='omptype'" 
+              ref="select"
+              style="margin: -5px 0; width: 122px"
+              :value="text"
+              @change="e => handleChange(e, record.key, col)"
+            >
+              <a-select-option v-for="omp in ompList" :key="omp" :value='omp'>{{omp}}</a-select-option>
             </a-select>
             <a-input
               v-else
@@ -285,14 +312,14 @@ const columns = [
       }
     }
   },
-  // {
-  //   title: '关键字段',
-  //   dataIndex: 'skill_keyword',
-  //   width: 200,
-  //   scopedSlots: {
-  //     customRender: 'skill_keyword' 
-  //   }
-  // },
+  {
+    title: '关键字段',
+    dataIndex: 'skill_keyword',
+    width: 200,
+    scopedSlots: {
+      customRender: 'skill_keyword' 
+    }
+  },
   {
     title: '地域',
     dataIndex: 'region',
@@ -324,25 +351,11 @@ const columns = [
     }
   },
   {
-    title: '状态',
-    dataIndex: 'status',
-    width: 100,
+    title: '紧急程度',
+    dataIndex: 'urgency',
+    width: 200,
     scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'status',
-    },
-    onFilter: (value, record) =>
-      record.status
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
+      customRender: 'urgency' 
     }
   },
   {
@@ -406,10 +419,10 @@ const columns = [
     }
   },
   {
-    title: '紧急程度',
-    dataIndex: 'urgency',
-    width: 150,
-    scopedSlots: { customRender: 'urgency' },
+    title: '报价类型',
+    dataIndex: 'type',
+    width: 210,
+    scopedSlots: { customRender: 'type' },
   },
   {
     title: '工作地点',
@@ -436,10 +449,38 @@ const columns = [
     scopedSlots: { customRender: 'arrival_num' },
   },
   {
+    title: 'OMP岗位',
+    dataIndex: 'omptype',
+    width: 180,
+    scopedSlots: { customRender: 'omptype' },
+  },
+  {
     title: '关闭时间',
     dataIndex: 'close_time',
     width: 300,
     scopedSlots: { customRender: 'close_time' },
+  },
+  {
+    title: '状态',
+    dataIndex: 'status',
+    width: 100,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'status',
+    },
+    onFilter: (value, record) =>
+      record.status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '备注',
@@ -462,15 +503,6 @@ import SelectProjectInfo from '@/components/recruitmentCompoment/SelectProjectIn
 import Html5Editor from '@/components/Html5Editor.vue';
 import NewRecruitment from '@/components/recruitmentCompoment/NewRecruitment.vue';
 import moment from 'moment';
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-    job: `Ed${i}`
-  });
-}
 export default {
   components: { BatchInput, BatchOutput, SelectProjectInfo, Html5Editor, NewRecruitment },
   props: {
@@ -502,7 +534,11 @@ export default {
       editing: false,
       title: '',
       baseUrl: '',
-      jobList: ['C/C++开发','JAVA开发','PYTHON开发','WEB开发','自动化测试','芯片测试','手动测试','软件开发测试','硬件开发','硬件测试','硬件维护','软件维护','BA','资料','标注','大数据','运维','C#开发','图像测试','CAD开发','IC验证','结构工程师','物料岗位','帆软开发工程师','热设计工程师','芯片验证','PQ','自动化电气工程师','其他']
+      isNewing: false,
+      jobList: ['C开发', 'C++开发', 'JAVA开发', 'PYTHON开发', 'WEB开发', '自动化测试', '芯片验证', '手动测试', '软件开发测试', '硬件开发', '硬件测试', '硬件维护', '资料开发', 'BA', '资料', '标注', '大数据', '运维', 'C#开发', '图像PQ', 'CAD开发', 'IC验证', '结构工程师', '其他'],
+      urgencyList: ['高', '中', '低', '暂停'],
+      typeList: ['SLA', '离职补缺', '新需求'],
+      ompList: ['软件开发工程', '硬件开发工程师', '测试工程师', '资料开发工程师']
     };
   },
   methods: {
@@ -524,18 +560,33 @@ export default {
       }
     },
     save(key) {
-      const newData = [...this.data];
-      const newCacheData = [...this.cacheData];
-      const target = newData.filter(item => key === item.key)[0];
-      const targetCache = newCacheData.filter(item => key === item.key)[0];
-      if (target && targetCache) {
-        delete target.editable;
-        this.data = newData;
-        Object.assign(targetCache, target);
-        this.cacheData = newCacheData;
+      if (this.isNewing){
+        const newData = [...this.data];
+        const newCacheData = [...this.cacheData];
+        const target = newData.filter(item => key === item.key)[0];
+        const targetCache = newCacheData.filter(item => key === item.key)[0];
+        if (target && targetCache) {
+          delete target.editable;
+          this.data = newData;
+          Object.assign(targetCache, target);
+          this.cacheData = newCacheData;
+        }
+        this.editingKey = '';
+        this.createRecruitmentInfo()
+      } else {
+        const newData = [...this.data];
+        const newCacheData = [...this.cacheData];
+        const target = newData.filter(item => key === item.key)[0];
+        const targetCache = newCacheData.filter(item => key === item.key)[0];
+        if (target && targetCache) {
+          delete target.editable;
+          this.data = newData;
+          Object.assign(targetCache, target);
+          this.cacheData = newCacheData;
+        }
+        this.editingKey = '';
+        this.updateRecruitmentInfo(key)
       }
-      this.editingKey = '';
-      this.updateRecruitmentInfo(key)
     },
     cancel(key) {
       const newData = [...this.data];
@@ -544,6 +595,12 @@ export default {
       if (target) {
         Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
         delete target.editable;
+        this.data = newData;
+      }
+      if (this.isNewing) {
+        this.isNewing = false
+        const newData = [...this.data];
+        newData.remove(0)
         this.data = newData;
       }
     },
@@ -603,6 +660,18 @@ export default {
           })
         }
       }
+    },
+    createRecruitmentInfo () {
+      // delete this.data[0].key
+      request.request({
+      url: this.getBaseUrl() + 'create_recruitment_info/',
+      method: 'post',
+      data: {data: this.data[0]}
+      }).then(res =>{
+        console.log(res);
+      }).catch(err =>{
+        console.log(err);
+      })
     },
     getRecruitmentInfo () {
       request.request({
@@ -702,7 +771,19 @@ export default {
     },
     newSwitch:{
       handler () {
-        this.isNewRecruitment = true
+        this.isNewing = true
+        let num = this.data[0].key
+        this.data.unshift({
+          key: num += 1,
+        });
+        this.cacheData = this.data.map(item => ({ ...item }));
+        const newData = [...this.data];
+        const target = newData.find(item => num += 1 === item.key);
+        this.editingKey = 0;
+        if (target) {
+          target.editable = true;
+          this.data = newData;
+        }
       }
     },
   },

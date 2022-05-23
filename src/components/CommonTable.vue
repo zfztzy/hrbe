@@ -164,7 +164,6 @@ export default {
           target.editable = true;
           this.data = newData;
         }
-        
       }
     },
   }

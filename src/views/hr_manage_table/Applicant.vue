@@ -90,7 +90,7 @@
             <a-date-picker
               show-time
               v-else-if="col=='recommend_time'" 
-              placeholder="推荐时间"
+              placeholder="推送时间"
               style="margin: -5px 0"
               @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
               @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
@@ -136,6 +136,14 @@
             <a-input
               v-else-if="col=='related'" 
               placeholder="关联需求"
+              style="margin: -5px 0"
+              :value="text"
+              @click="selectRelated(record.key)"
+              @change="e => handleChange(e.target.value, record.key, col)"
+            />
+            <a-input
+              v-else-if="col=='pdu'" 
+              placeholder="推荐项目组"
               style="margin: -5px 0"
               :value="text"
               @click="selectRelated(record.key)"
@@ -212,10 +220,37 @@ import BatchOutput from '@/components/batchControl/BatchOutput.vue';
 import NewElement from '@/components/ApplicantCompoents/NewElement.vue';
 const columns = [
   {
+    title: '推送时间',
+    dataIndex: 'recommend_time',
+    width: 250,
+    scopedSlots: { customRender: 'recommend_time' },
+  },
+  {
+    title: '招聘顾问',
+    dataIndex: 'recommender',
+    width: 120,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'recommender',
+    },
+    onFilter: (value, record) =>
+      record.recommender
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
+  },
+  {
     title: '姓名',
     dataIndex: 'name',
     width: 100,
-    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -233,6 +268,150 @@ const columns = [
         }, 0);
       }
     },
+  },
+  {
+    title: '电话',
+    dataIndex: 'phone_num',
+    width: 200,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'phone_num',
+    },
+    onFilter: (value, record) =>
+      record.phone_num
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
+    title: '性别',
+    dataIndex: 'sex',
+    width: 100,
+    scopedSlots: { customRender: 'sex' },
+  },
+  {
+    title: '学历',
+    dataIndex: 'education',
+    width: 100,
+    scopedSlots: { customRender: 'education' },
+  },
+  {
+    title: '毕业院校',
+    dataIndex: 'graduated_from',
+    width: 250,
+    scopedSlots: { customRender: 'graduated_from' },
+  },
+  {
+    title: '专业',
+    dataIndex: 'major',
+    width: 250,
+    scopedSlots: { customRender: 'major' },
+  },
+  {
+    title: '毕业日期',
+    dataIndex: 'graduation',
+    width: 130,
+    scopedSlots: { customRender: 'graduation' },
+  },
+  {
+    title: '工作年限',
+    dataIndex: 'working_seniority',
+    width: 100,
+    scopedSlots: { customRender: 'working_seniority' },
+  },
+  {
+    title: '面试岗位',
+    dataIndex: 'job',
+    width: 200,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon', 
+      customRender: 'job' 
+    },
+    onFilter: (value, record) =>
+      record.job
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
+    title: '在/离职状态',
+    dataIndex: 'onjob',
+    width: 100,
+    scopedSlots: { customRender: 'onjob' },
+  },
+  {
+    title: '期望面试时间及方式',
+    dataIndex: 'interviews',
+    width: 300,
+    scopedSlots: { customRender: 'interviews' },
+  },
+  {
+    title: '意向地',
+    dataIndex: 'region',
+    width: 100,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon', 
+      customRender: 'region' 
+    },
+    onFilter: (value, record) =>
+      record.region
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
+    title: 'HR沟通记录',
+    dataIndex: 'reason1',
+    width: 300,
+    scopedSlots: { customRender: 'reason1' },
+  },
+  {
+    title: 'PDU',
+    dataIndex: 'pdu',
+    width: 130,
+    scopedSlots: { customRender: 'pdu' },
+  },
+  {
+    title: '软通面试结果及评语',
+    dataIndex: 'own_interview_results',
+    width: 130,
+    scopedSlots: { customRender: 'own_interview_results' },
+  },
+  {
+    title: '建议职级',
+    dataIndex: 'suggest_level',
+    width: 100,
+    scopedSlots: { customRender: 'suggest_level' },
+  },
+  {
+    title: 'HR沟通记录',
+    dataIndex: 'hw_interview_results1',
+    width: 100,
+    scopedSlots: { customRender: 'hw_interview_results1' },
   },
   {
     title: '流程状态',
@@ -279,118 +458,10 @@ const columns = [
     },
   },
   {
-    title: '电话',
-    dataIndex: 'phone_num',
-    width: 200,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'phone_num',
-    },
-    onFilter: (value, record) =>
-      record.phone_num
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
-  },
-  {
-    title: '毕业院校',
-    dataIndex: 'graduated_from',
-    width: 250,
-    scopedSlots: { customRender: 'graduated_from' },
-  },
-  {
-    title: '学历',
-    dataIndex: 'education',
-    width: 100,
-    scopedSlots: { customRender: 'education' },
-  },
-  {
-    title: '专业',
-    dataIndex: 'major',
-    width: 250,
-    scopedSlots: { customRender: 'major' },
-  },
-  {
-    title: '工作年限',
-    dataIndex: 'working_seniority',
-    width: 100,
-    scopedSlots: { customRender: 'working_seniority' },
-  },
-  {
-    title: '面试岗位',
-    dataIndex: 'job',
-    width: 200,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon', 
-      customRender: 'job' 
-    },
-    onFilter: (value, record) =>
-      record.job
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
-  },
-  {
-    title: '地域',
-    dataIndex: 'region',
-    width: 100,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon', 
-      customRender: 'region' 
-    },
-    onFilter: (value, record) =>
-      record.region
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
-  },
-  {
-    title: '性别',
-    dataIndex: 'sex',
-    width: 100,
-    scopedSlots: { customRender: 'sex' },
-  },
-  {
-    title: '建议职级',
-    dataIndex: 'suggest_level',
-    width: 100,
-    scopedSlots: { customRender: 'suggest_level' },
-  },
-  {
     title: '入学日期',
     dataIndex: 'entrance',
     width: 130,
     scopedSlots: { customRender: 'entrance' },
-  },
-  {
-    title: '毕业日期',
-    dataIndex: 'graduation',
-    width: 130,
-    scopedSlots: { customRender: 'graduation' },
   },
   {
     title: '关联需求',
@@ -415,12 +486,6 @@ const columns = [
     },
   },
   {
-    title: 'PDU',
-    dataIndex: 'pdu',
-    width: 100,
-    scopedSlots: { customRender: 'pdu' },
-  },
-  {
     title: '项目名称',
     dataIndex: 'project_name',
     width: 250,
@@ -433,44 +498,10 @@ const columns = [
     scopedSlots: { customRender: 'arrival_time' },
   },
   {
-    title: '招聘顾问',
-    dataIndex: 'recommender',
-    width: 120,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'recommender',
-    },
-    onFilter: (value, record) =>
-      record.recommender
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    }
-  },
-  {
-    title: '推荐时间',
-    dataIndex: 'recommend_time',
-    width: 250,
-    scopedSlots: { customRender: 'recommend_time' },
-  },
-  {
     title: '软通面试人',
     dataIndex: 'own_interviewer',
     width: 120,
     scopedSlots: { customRender: 'own_interviewer' },
-  },
-  {
-    title: '软通面试结果',
-    dataIndex: 'own_interview_results',
-    width: 100,
-    scopedSlots: { customRender: 'own_interview_results' },
   },
   {
     title: '软通面试时间',
@@ -501,12 +532,6 @@ const columns = [
     dataIndex: 'hw_interviewer1',
     width: 120,
     scopedSlots: { customRender: 'hw_interviewer1' },
-  },
-  {
-    title: '华为技面结果',
-    dataIndex: 'hw_interview_results1',
-    width: 100,
-    scopedSlots: { customRender: 'hw_interview_results1' },
   },
   {
     title: '华为技面时间',
@@ -549,12 +574,6 @@ const columns = [
     dataIndex: 'giveup_time',
     width: 240,
     scopedSlots: { customRender: 'giveup_time' },
-  },
-  {
-    title: '原因（各阶段评价）',
-    dataIndex: 'reason1',
-    width: 300,
-    scopedSlots: { customRender: 'reason1' },
   },
   {
     title: 'operation',
