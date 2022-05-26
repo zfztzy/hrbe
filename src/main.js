@@ -10,6 +10,7 @@ import 'ant-design-vue/dist/antd.css';
 import VueCookies from 'vue-cookies'
 import moment from 'moment'
 import VueQuillEditor from 'vue-quill-editor'
+import VueClipboard from 'vue-clipboard2'
 
 // require styles
 import 'quill/dist/quill.core.css'
@@ -24,6 +25,7 @@ Vue.use(VueQuillEditor, /* { default global options } */)
 
 
 
+Vue.use(VueClipboard)
 Vue.use(VueCookies)
 Vue.prototype.$moment = moment;
 Vue.config.productionTip = false

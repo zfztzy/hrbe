@@ -61,7 +61,10 @@ export default {
       request.request({
       url: this.getBaseUrl() + 'get_file_list/',
       method: 'post',
-      data: {batchType: this.batchType},
+      data: {
+        batchType: this.batchType,
+        userName: this.$cookies.get("nickname")
+      },
       headers: { "Content-Type": "multipart/form-data" }
       }).then(res =>{
         this.fileList = res.data.fileList
@@ -77,7 +80,8 @@ export default {
       data: {
         batchType: this.batchType,
         filterRegion: this.$cookies.get("region"),
-        selectDate: this.selectDate
+        selectDate: this.selectDate,
+        userName: this.$cookies.get("nickname")
       },
       headers: { "Content-Type": "multipart/form-data" }
       }).then(res =>{

@@ -288,7 +288,23 @@ const columns = [
     dataIndex: 'proposer',
     fixed: 'left',
     width: 150,
-    scopedSlots: { customRender: 'proposer' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'proposer',
+    },
+    onFilter: (value, record) =>
+      record.proposer
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    }
   },
   {
     title: '岗位方向',
@@ -317,7 +333,21 @@ const columns = [
     dataIndex: 'skill_keyword',
     width: 200,
     scopedSlots: {
-      customRender: 'skill_keyword' 
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'skill_keyword',
+    },
+    onFilter: (value, record) =>
+      record.skill_keyword
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
     }
   },
   {
@@ -347,7 +377,21 @@ const columns = [
     dataIndex: 'type2',
     width: 200,
     scopedSlots: {
-      customRender: 'type2' 
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'type2',
+    },
+    onFilter: (value, record) =>
+      record.type2
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
     }
   },
   {
@@ -355,7 +399,21 @@ const columns = [
     dataIndex: 'urgency',
     width: 200,
     scopedSlots: {
-      customRender: 'urgency' 
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'urgency',
+    },
+    onFilter: (value, record) =>
+      record.urgency
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
     }
   },
   {
@@ -431,7 +489,7 @@ const columns = [
     scopedSlots: { customRender: 'location' },
   },
   {
-    title: '计面官',
+    title: '技面官',
     dataIndex: 'interviewer',
     width: 100,
     scopedSlots: { customRender: 'interviewer' },

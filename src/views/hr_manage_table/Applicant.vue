@@ -92,8 +92,8 @@
               v-else-if="col=='recommend_time'" 
               placeholder="推送时间"
               style="margin: -5px 0"
-              @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
-              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"
+              @ok="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
             <a-date-picker
               show-time
               v-else-if="col=='hw_interview_time2'" 
@@ -108,11 +108,11 @@
               style="margin: -5px 0"
               @change="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"
               @ok="dateString => handleChange(dateString.format('YYYY-MM-DD HH:MM:ss'), record.key, col)"/>
-            <a-date-picker 
+            <!-- <a-date-picker 
               v-else-if="col=='arrival_time'" 
               placeholder="能够到岗时间"
               style="margin: -5px 0"
-              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/> -->
             <a-date-picker 
               v-else-if="col=='entrance'" 
               placeholder="入学日期"
@@ -184,9 +184,9 @@
             </template> -->
             <template v-else>
               <template v-if="col=='machine_test_time'||col=='hw_interview_time1'||col=='recommend_time'||col=='hw_interview_time2'||col=='own_interview_time'">
-                {{ text | datetime}}
+                {{ text | date}}
               </template>
-              <template v-else-if="col=='giveup_time'||col=='final_time'||col=='graduation'||col=='entrance'||col=='arrival_time'">
+              <template v-else-if="col=='giveup_time'||col=='final_time'||col=='graduation'||col=='entrance'">
                 {{ text | date}}
               </template><template v-else-if="col=='process_status'">
                 {{ text }}
@@ -222,13 +222,15 @@ const columns = [
   {
     title: '推送时间',
     dataIndex: 'recommend_time',
-    width: 250,
+    width: 150,
+    fixed: 'left',
     scopedSlots: { customRender: 'recommend_time' },
   },
   {
     title: '招聘顾问',
     dataIndex: 'recommender',
     width: 120,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -251,6 +253,7 @@ const columns = [
     title: '姓名',
     dataIndex: 'name',
     width: 100,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -315,6 +318,12 @@ const columns = [
     width: 250,
     scopedSlots: { customRender: 'major' },
   },
+  // {
+  //   title: '入学日期',
+  //   dataIndex: 'entrance',
+  //   width: 130,
+  //   scopedSlots: { customRender: 'entrance' },
+  // },
   {
     title: '毕业日期',
     dataIndex: 'graduation',
@@ -358,7 +367,7 @@ const columns = [
   {
     title: '期望面试时间及方式',
     dataIndex: 'interviews',
-    width: 300,
+    width: 130,
     scopedSlots: { customRender: 'interviews' },
   },
   {
@@ -390,7 +399,7 @@ const columns = [
     scopedSlots: { customRender: 'reason1' },
   },
   {
-    title: 'PDU',
+    title: '推荐PDU',
     dataIndex: 'pdu',
     width: 130,
     scopedSlots: { customRender: 'pdu' },
@@ -408,13 +417,25 @@ const columns = [
     scopedSlots: { customRender: 'suggest_level' },
   },
   {
-    title: 'HR沟通记录',
+    title: '华为复核结果',
     dataIndex: 'hw_interview_results1',
     width: 100,
     scopedSlots: { customRender: 'hw_interview_results1' },
   },
   {
-    title: '流程状态',
+    title: '华为终面复核结果',
+    dataIndex: 'hw_interview_results2',
+    width: 100,
+    scopedSlots: { customRender: 'hw_interview_results2' },
+  },
+  {
+    title: '简历进度',
+    dataIndex: 'reason2',
+    width: 240,
+    scopedSlots: { customRender: 'reason2' },
+  },
+  {
+    title: '简历最后状况',
     dataIndex: 'process_status',
     width: 160,
     scopedSlots: {
@@ -436,32 +457,34 @@ const columns = [
     },
   },
   {
-    title: '简历状态',
-    dataIndex: 'resume_status',
+    title: '待入职时间',
+    dataIndex: 'arrival_time',
     width: 130,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'resume_status',
-    },
-    onFilter: (value, record) =>
-      record.resume_status
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
+    scopedSlots: { customRender: 'arrival_time' },
   },
   {
-    title: '入学日期',
-    dataIndex: 'entrance',
-    width: 130,
-    scopedSlots: { customRender: 'entrance' },
+    title: '接受offer薪资/给到的offer薪资',
+    dataIndex: 'offersuggest',
+    width: 140,
+    scopedSlots: { customRender: 'offersuggest' },
+  },
+  {
+    title: '拒offer原因',
+    dataIndex: 'reason4',
+    width: 240,
+    scopedSlots: { customRender: 'reason4' },
+  },
+  {
+    title: '入职时间',
+    dataIndex: 'final_time',
+    width: 240,
+    scopedSlots: { customRender: 'final_time' },
+  },
+  {
+    title: '放弃offer时间',
+    dataIndex: 'giveup_time',
+    width: 240,
+    scopedSlots: { customRender: 'giveup_time' },
   },
   {
     title: '关联需求',
@@ -490,12 +513,6 @@ const columns = [
     dataIndex: 'project_name',
     width: 250,
     scopedSlots: { customRender: 'project_name' },
-  },
-  {
-    title: '能够到岗时间',
-    dataIndex: 'arrival_time',
-    width: 250,
-    scopedSlots: { customRender: 'arrival_time' },
   },
   {
     title: '软通面试人',
@@ -546,12 +563,6 @@ const columns = [
     scopedSlots: { customRender: 'hw_interviewer2' },
   },
   {
-    title: '华为综面结果',
-    dataIndex: 'hw_interview_results2',
-    width: 100,
-    scopedSlots: { customRender: 'hw_interview_results2' },
-  },
-  {
     title: '华为综面时间',
     dataIndex: 'hw_interview_time2',
     width: 240,
@@ -564,16 +575,26 @@ const columns = [
     scopedSlots: { customRender: 'final_result' },
   },
   {
-    title: '入项时间',
-    dataIndex: 'final_time',
-    width: 240,
-    scopedSlots: { customRender: 'final_time' },
-  },
-  {
-    title: '放弃offer时间',
-    dataIndex: 'giveup_time',
-    width: 240,
-    scopedSlots: { customRender: 'giveup_time' },
+    title: '流程状态',
+    dataIndex: 'resume_status',
+    width: 130,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'resume_status',
+    },
+    onFilter: (value, record) =>
+      record.resume_status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
   },
   {
     title: 'operation',

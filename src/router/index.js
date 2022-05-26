@@ -9,26 +9,20 @@ const CommonTable = () => import('@/components/CommonTable.vue')
 const HrManageTable = () => import('../views/hr_manage_table/HrManageTable')
 const BusinessManager = () => import('../views/business_manager/BusinessManager')
 const ProjectManager = () => import('../views/project_manager/ProjectManger')
+const HrManager = () => import('../views/hr_manager/HrManager')
 const Recruitment = () => import('../views/hr_manage_table/Recruitment')
 const RecruitChart = () => import('../views/hr_manage_table/RecruitChart')
 const PojectStatus = () => import('../views/hr_manage_table/PojectStatus')
 const pduinfo = () => import('../views/project_manager/PduInfo')
 const ProjectInfo = () => import('../views/project_manager/ProjectInfo')
 const PoInfo = () => import('../views/project_manager/PoInfo')
+const CustomerInfo = () => import('../views/project_manager/CustomerInfo')
 const PoList = () => import('../views/business_manager/PoList')
-const ClockIn = () => import('../views/clockIn/ClockIn.vue')
-const Diary = () => import('../views/diary/Diary')
-const Difficulty = () => import('../views/difficulty/Difficulty')
-const Qa = () => import('../views/qa/Qa')
-const Study = () => import('../views/study/Study')
-const Studyhome = ()  => import('../views/study/Studyhome')
-const Studyparagraph = ()  => import('../views/study/Studyparagraph')
-const Studyleetcode = ()  => import('../views/study/Studyleetcode')
-const Studyparagraphlist = ()  => import('../views/study/Studyparagraphlist')
+const Salary = () => import('../views/hr_manager/Salary')
+const Employee = () => import('../views/hr_manager/Employee')
 const AppHome = ()  => import('../views/AppHome.vue')
 const HomeMenu = ()  => import('../views/HomeMenu.vue')
 const LoginView = ()  => import('../views/LoginView.vue')
-// const Studyhome = ()  => import('../views/study/Studyhome')
 
 Vue.use(VueRouter)
 
@@ -87,6 +81,11 @@ const routes = [
             path: 'PoInfo',
             name: 'poinfo',
             component: PoInfo,
+          },
+          {
+            path: 'CustomerInfo',
+            name: 'customerinfo',
+            component: CustomerInfo,
           }
         ]
       },
@@ -109,54 +108,23 @@ const routes = [
         ]
       },
       {
-        path: '/clockIn',
-        name: 'ClockIn',
-        component: ClockIn
-      },
-      {
-        path: '/diary',
-        name: 'Diary',
-        component: Diary
-      },
-      {
-        path: '/difficulty',
-        name: 'Difficulty',
-        component: Difficulty
-      },
-      {
-        path: '/qa',
-        name: 'Qa',
-        component: Qa
-      },
-      {
-        path: '/study',
-        name: 'Study',
-        component: Study,
-        redirect:'/study/home',
-        children:[
+        path: '/hrManager',
+        name: 'HrManager',
+        component: HrManager,
+        redirect:'/hrManager/Employee',
+        children: [
           {
-            path: 'home',
-            name: 'StudyHome',
-            component: Studyhome,
+            path: 'employee',
+            name: 'employee',
+            component: Employee,
           },
           {
-            path: '/study/content',
-            name: 'Studyparagraph',
-            component: Studyparagraph,
-          },
-          {
-            path: 'leetcode',
-            name: 'Studyleetcode',
-            component: Studyleetcode,
-          },
-          {
-            path: '/study/list',
-            name: 'Studyparagraphlist',
-            component: Studyparagraphlist,
-          },
+            path: 'salary',
+            name: 'salary',
+            component: Salary,
+          }
         ]
-      },
-      
+      }
     ]
   },
   {

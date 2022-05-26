@@ -92,7 +92,7 @@ export default {
                     this.content = newValue.requirements
                     this.editUpdate()
                 } else {
-                    this.content = newValue
+                    this.content = ''
                     this.editUpdate()
                 }
             }
