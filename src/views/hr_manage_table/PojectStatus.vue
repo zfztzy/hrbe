@@ -109,9 +109,21 @@
           <span v-else>
             <template v-if="record.canEdit">
               <a :disabled="editingKey !== ''" @click="() => edit(record.key)">Edit</a>
+              <a-popconfirm
+                title="Sure to delete?"
+                @confirm="() => onDelete(record.key)"
+              >
+                <a href="javascript:;">Delete</a>
+              </a-popconfirm>
             </template>
             <template v-else>
               <a style="color:#d9d9d9">Edit</a>
+              <a-popconfirm
+                title="Sure to delete?"
+                @confirm="() => onDelete(record.key)"
+              >
+                <a href="javascript:;">Delete</a>
+              </a-popconfirm>
             </template>
           </span>
         </div>
@@ -127,13 +139,15 @@ const columns = [
   {
     title: '日期',
     dataIndex: 'date',
-    width: 200,
+    width: 120,
+    fixed: 'left',
     scopedSlots: { customRender: 'date' },
   },
   {
     title: '部门',
     dataIndex: 'department',
     width: 130,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -156,6 +170,7 @@ const columns = [
     title: 'PDU',
     dataIndex: 'pdu',
     width: 140,
+    fixed: 'left',
     scopedSlots: {
       filterDropdown: 'filterDropdown',
       filterIcon: 'filterIcon',
@@ -177,13 +192,15 @@ const columns = [
   {
     title: 'PO',
     dataIndex: 'po_num',
-    width: 170,
+    width: 150,
+    fixed: 'left',
     scopedSlots: { customRender: 'po_num' },
   },
   {
     title: '项目',
     dataIndex: 'project',
-    width: 180,
+    width: 280,
+    fixed: 'left',
     scopedSlots: { customRender: 'project' },
   },
   {
@@ -292,15 +309,6 @@ const columns = [
 const data = [];
 import * as request from "@/network/request"
 import Chart from '@/components/Chart.vue';
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-    job: `Ed${i}`
-  });
-}
 export default {
   components: { BatchInput, BatchOutput, Chart },
   props: {
@@ -313,7 +321,10 @@ export default {
     },
     selectDate: {
       type: String
-    }
+    },
+    newSwitch: {
+      type: Number
+    },
   },
   data() {
     this.cacheData = data.map(item => ({ ...item }));
@@ -329,6 +340,7 @@ export default {
       isBatchControl: false,
       isBatchControl2: false,
       titleData: ['需求总数', '月度满足数', '需求满足度'],
+      isNewing: false,
       date1: '',
       date2: '',
       date3: '',
@@ -664,7 +676,8 @@ export default {
       method: 'post',
       data: {data: target}
       }).then(res =>{
-        console.log(res);
+        target = res.data
+        this.getProjectStatusInfo()
       }).catch(err =>{
         console.log(err);
       })
@@ -680,6 +693,30 @@ export default {
       }).catch(err =>{
         console.log(err);
       })
+    },
+    onDelete(key) {
+      console.log(key);
+      for (let index = 0; index < this.data.length; index++) {
+        const element = this.data[index]
+        if (element.key == key) {
+          console.log(this.data)
+          this.data.remove(index)
+          console.log(this.data)
+        }
+      }
+      request.request({
+      url: this.getBaseUrl() + 'delete_project_status_info/',
+      method: 'post',
+      data: {
+        deleteKey: key,
+      }
+      }).then(res =>{
+        console.log(res);
+      }).catch(err =>{
+        console.log(err);
+      })
+      this.cacheData = []
+      this.cacheData = this.data.map(item => ({ ...item }))
     },
     getProjectStatusInfo () {
       this.cacheData = []
@@ -806,6 +843,11 @@ export default {
         console.log(oldValue)
         this.getProjectStatusInfo()
         this.getPicValue()
+      }
+    },
+    newSwitch:{
+      handler () {
+        this.isNewing = true
       }
     }
   }

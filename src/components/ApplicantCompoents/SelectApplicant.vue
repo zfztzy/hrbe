@@ -192,6 +192,10 @@ export default {
 	},
 	mounted () {
     this.model = deepCopy(this.Applicant)
+		console.log(this.model);
+		this.model.recommend_time = moment(this.Applicant.recommend_time).format('YYYY-MM-DD')
+		this.model.graduation = moment(this.Applicant.graduation).format('YYYY-MM-DD') 
+		console.log(this.model);
 	},
 	watch: {
 		Applicant: {
@@ -199,9 +203,33 @@ export default {
 				console.log(newValue)
 				console.log(oldValue)
 				this.model = deepCopy(this.Applicant)
+				console.log(this.model);
+				this.model.recommend_time = moment(this.Applicant.recommend_time).format('YYYY-MM-DD')
+				this.model.graduation = moment(this.Applicant.graduation).format('YYYY-MM-DD') 
+				console.log(this.model);
 			}
 		}
-	}
+	},
+  filters: {
+    datetime(text) {
+      if (text) {
+      return moment(text).format('YYYY-MM-DD HH:MM:ss') 
+      } else {
+        return text
+      }
+    },
+    date(text) {
+      if (text) {
+        return moment(text).format('YYYY-MM-DD') 
+      } else {
+        return text
+      }
+    },
+    phone(text) {
+      console.log(text)
+      return text + ' '
+    }
+  }
 }
 </script>
 

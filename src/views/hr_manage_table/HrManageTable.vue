@@ -35,6 +35,7 @@
       <a-month-picker placeholder="Select month" @change="onChange2" />
     </a-space>
     <a-space v-if="isProjectStatus" style="float:right">
+      <a-button class="tableButton" @click="newInfo">新增</a-button>
       <a-button class="tableButton" @click="batchOutput">导出</a-button>
       <a-button class="tableButton" @click="showDrawer">图表总览</a-button>
     </a-space>

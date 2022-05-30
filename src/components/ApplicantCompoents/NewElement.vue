@@ -98,7 +98,9 @@ export default {
       major: undefined,
       interviews: undefined,
       onjob: undefined,
-      working_seniority: undefined
+      working_seniority: undefined,
+      job: undefined,
+      phone_num: undefined
     }
   },
   methods: {
