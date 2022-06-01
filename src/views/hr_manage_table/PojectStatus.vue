@@ -677,7 +677,8 @@ export default {
       data: {data: target}
       }).then(res =>{
         target = res.data
-        this.getProjectStatusInfo()
+        this.cacheData = []
+        // this.cacheData = this.data.map(item => ({ ...item }))
       }).catch(err =>{
         console.log(err);
       })

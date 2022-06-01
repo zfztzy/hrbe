@@ -114,6 +114,12 @@
                 style="margin: -5px 0"
                 @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
             </template>
+            <template v-else-if="col=='close_time'" >
+              <a-date-picker
+                placeholder="关闭时间"
+                style="margin: -5px 0"
+                @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+            </template>
             <a-select
               v-else-if="col=='position_attribute'" 
               ref="select"
@@ -169,6 +175,9 @@
               {{ text | date}}
             </template>
             <template v-else-if="col=='arrival_time'" >
+              {{ text | date}}
+            </template>
+            <template v-else-if="col=='close_time'" >
               {{ text | date}}
             </template>
             <template v-else>

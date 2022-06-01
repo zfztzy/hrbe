@@ -273,6 +273,28 @@ const columns = [
     },
   },
   {
+    title: '简历最后状况',
+    dataIndex: 'process_status',
+    width: 160,
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon',
+      customRender: 'process_status',
+    },
+    onFilter: (value, record) =>
+      record.process_status
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
     title: '电话',
     dataIndex: 'phone_num',
     width: 200,
@@ -433,28 +455,6 @@ const columns = [
     dataIndex: 'reason2',
     width: 240,
     scopedSlots: { customRender: 'reason2' },
-  },
-  {
-    title: '简历最后状况',
-    dataIndex: 'process_status',
-    width: 160,
-    scopedSlots: {
-      filterDropdown: 'filterDropdown',
-      filterIcon: 'filterIcon',
-      customRender: 'process_status',
-    },
-    onFilter: (value, record) =>
-      record.process_status
-        .toString()
-        .toLowerCase()
-        .includes(value.toLowerCase()),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => {
-          this.searchInput.focus();
-        }, 0);
-      }
-    },
   },
   {
     title: '待入职时间',

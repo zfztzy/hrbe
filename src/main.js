@@ -68,7 +68,7 @@ Vue.prototype.checkLogin = function () {
       if (res.data.limits[routeName]) {
         console.log('pass');
       } else {
-        this.$router.push('/home')
+        // this.$router.push('/home')
         alert('没有访问权限')
       }
     } else {
@@ -81,3 +81,4 @@ Vue.prototype.checkLogin = function () {
     console.log(err);
   })
 }
+
