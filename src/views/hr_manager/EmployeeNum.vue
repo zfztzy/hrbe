@@ -3,7 +3,7 @@
     <div v-show="isBatchControl || isBatchControl2" @click="close" class="maskLayer"></div>
     <batch-input batchType='ProjectInfo' v-show="isBatchControl" @close='close'  class="newApplicant"></batch-input>
     <batch-output batchType='ProjectInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
-    <common-table tableType='employee'  :newSwitch='newSwitch'></common-table>
+    <common-table tableType='employeenum'  :newSwitch='newSwitch'></common-table>
   </div>
 </template>
 
@@ -26,6 +26,7 @@ export default {
     return{
       isBatchControl: false,
       isBatchControl2: false,
+      
     }
   },
   methods: {

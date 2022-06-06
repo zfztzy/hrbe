@@ -68,15 +68,15 @@ Vue.prototype.checkLogin = function () {
       if (res.data.limits[routeName]) {
         console.log('pass');
       } else {
-        // this.$router.push('/home')
+        this.$router.push('/home')
         alert('没有访问权限')
       }
     } else {
-      this.$router.push('/login')
+      this.$router.push('/Login')
       alert(res.data.msg)
     }
   }).catch(err =>{
-    this.$router.push('/login')
+    this.$router.push('/Login')
     alert('非法登入')
     console.log(err);
   })

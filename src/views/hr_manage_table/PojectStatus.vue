@@ -274,12 +274,6 @@ const columns = [
     scopedSlots: { customRender: 'monthly_target' },
   },
   {
-    title: '需求紧急程度',
-    dataIndex: 'urgency',
-    width: 150,
-    scopedSlots: { customRender: 'urgency' },
-  },
-  {
     title: '月度满足数',
     dataIndex: 'monthly_reach',
     width: 150,
@@ -290,6 +284,12 @@ const columns = [
     dataIndex: 'monthly_target_reach',
     width: 150,
     scopedSlots: { customRender: 'monthly_target_reach' },
+  },
+  {
+    title: '需求紧急程度',
+    dataIndex: 'urgency',
+    width: 150,
+    scopedSlots: { customRender: 'urgency' },
   },
   {
     title: '备注',

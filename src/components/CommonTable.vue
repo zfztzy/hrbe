@@ -81,6 +81,7 @@ export default {
       }
     },
     save(key) {
+      
       const newData = [...this.data];
       const newCacheData = [...this.cacheData];
       const target = newData.find(item => key === item.key);
@@ -94,6 +95,12 @@ export default {
       this.$emit('save', newData, this.editingKey)
       this.editingKey = '';
       this.cacheData = this.data.map(item => ({ ...item }));
+      if(this.isNewing){
+            this.createCommon()
+        }else{
+          this.updateCommon(key)
+        }
+      
     },
     cancel(key) {
       const newData = [...this.data];
@@ -137,6 +144,38 @@ export default {
       }).then(res =>{
         this.data = res.data.tableData;
         this.cacheData = this.data.map(item => ({ ...item }));
+      }).catch(err =>{
+        console.log(err);
+      })
+    },
+    updateCommon(key){
+      for (const i of this.data) {
+        if (i.key===key) {
+          request.request({
+          url: this.getBaseUrl() + 'update_common_info/',
+          method: 'post',
+          data: {
+            tableType: this.tableType,
+            data: i
+            }
+          }).then(res =>{
+            console.log(res);
+          }).catch(err =>{
+            console.log(err);
+          })
+        }
+      }
+    },
+    createCommon(){
+      request.request({
+      url: this.getBaseUrl() + 'create_common_info/',
+      method: 'post',
+      data: {
+        tableType: this.tableType,
+        data: this.data[0]
+        }
+      }).then(res =>{
+        console.log(res);
       }).catch(err =>{
         console.log(err);
       })

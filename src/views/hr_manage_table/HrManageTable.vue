@@ -30,6 +30,7 @@
       <a-button class="tableButton" @click="newInfo">新增</a-button>
       <a-button class="tableButton" @click="batchInput">批量导入</a-button>
       <a-button class="tableButton" @click="batchOutput">批量导出</a-button>
+      <a-button v-if="isRecruitment" class="tableButton" @click="showDrawer">图表总览</a-button>
     </a-space>
     <a-space class="SelectMonth" v-if="isProjectStatus">
       <a-month-picker placeholder="Select month" @change="onChange2" />
@@ -124,7 +125,8 @@ export default {
       cleanNum: 0,
       isProjectStatus: false,
       visible: false,
-      selectDate: undefined
+      selectDate: undefined,
+      isRecruitment: false
     }
   },    
   methods:{
@@ -164,6 +166,11 @@ export default {
         this.isProjectStatus = true
       } else {
         this.isProjectStatus = false
+      }
+      if (this.$route.name==='recruitment') {
+        this.isRecruitment = true
+      } else {
+        this.isRecruitment = false
       }
     },
     resetFilter () {

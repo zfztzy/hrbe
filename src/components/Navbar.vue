@@ -59,12 +59,14 @@
         <div class="topMenu" v-show="isShow3" @mouseleave="close">
           <a-space :size="200" style="margin-left:10%">
               <a @click="jumpPath3('PoList')"><h5>PO运营</h5></a> 
+              <a @click="jumpPath3('Salary')"><h5>薪资调整</h5></a> 
           </a-space>
         </div>
          <div class="topMenu" v-show="isShow4" @mouseleave="close">
           <a-space :size="200" style="margin-left:10%">
+              <a @click="jumpPath4('EmployeeNum')"><h5>员工工号</h5></a> 
               <a @click="jumpPath4('Employee')"><h5>员工信息</h5></a> 
-              <a @click="jumpPath4('Salary')"><h5>薪资调整</h5></a> 
+              <a @click="jumpPath4('Contact')"><h5>员工沟通</h5></a> 
           </a-space>
         </div>
     </a-layout-header>

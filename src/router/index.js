@@ -18,8 +18,10 @@ const ProjectInfo = () => import('../views/project_manager/ProjectInfo')
 const PoInfo = () => import('../views/project_manager/PoInfo')
 const CustomerInfo = () => import('../views/project_manager/CustomerInfo')
 const PoList = () => import('../views/business_manager/PoList')
-const Salary = () => import('../views/hr_manager/Salary')
+const Salary = () => import('../views/business_manager/Salary')
 const Employee = () => import('../views/hr_manager/Employee')
+const EmployeeNum = () => import('../views/hr_manager/EmployeeNum')
+const Contact = () => import('../views/hr_manager/Contact')
 const AppHome = ()  => import('../views/AppHome.vue')
 const HomeMenu = ()  => import('../views/HomeMenu.vue')
 const LoginView = ()  => import('../views/LoginView.vue')
@@ -101,6 +103,11 @@ const routes = [
             component: PoList,
           },
           {
+            path: 'salary',
+            name: 'salary',
+            component: Salary,
+          },
+          {
             path: 'commonTable',
             name: 'CommonTable',
             component: CommonTable,
@@ -119,9 +126,14 @@ const routes = [
             component: Employee,
           },
           {
-            path: 'salary',
-            name: 'salary',
-            component: Salary,
+            path: 'employeenum',
+            name: 'employeenum',
+            component: EmployeeNum,
+          },
+          {
+            path: 'contact',
+            name: 'contact',
+            component: Contact,
           }
         ]
       }

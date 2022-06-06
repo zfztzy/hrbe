@@ -23,7 +23,7 @@ export default {
   methods: {
   },
   created () {
-    this.checkLogin()
+    // this.checkLogin()
   },
   watch: {
     $route: {

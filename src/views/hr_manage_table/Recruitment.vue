@@ -1,6 +1,22 @@
 <template>
   <div>
     <div v-show="isBatchControl || isBatchControl2 || isSelectRelatedId || isHtml5Editor || isNewRecruitment" @click="close" class="maskLayer"></div>
+    <a-drawer
+      title="图表总览"
+      placement="right"
+      :closable="false"
+      :visible="visible"
+      :after-visible-change="afterVisibleChange"
+      @close="onClose"
+      width='900px'
+    >
+    <el-scrollbar style="height:100%">
+      <chart title="海思半导体PDU需求" keyId="chart1" :series="[series1A, series2A, series3A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
+      <chart title="上海海思PDU需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
+      <chart title="海思半导体地域需求" keyId="chart3" :series="[series1C, series2C, series3C]" :xAxis="[xDataC]" :yAxis="[yData1C, yData2C]" :titleData="titleData"/>
+      <chart title="上海海思地域需求" keyId="chart4" :series="[series1D, series2D, series3D]" :xAxis="[xDataD]" :yAxis="[yData1D, yData2D]" :titleData="titleData"/>
+    </el-scrollbar>
+    </a-drawer>
     <html-5-editor @confirm='updateRequirements' :editType="editing" :model="model" v-show="isHtml5Editor" @close='close' class="newApplicant"></html-5-editor>
     <new-recruitment  :isNewRecruitment='isNewRecruitment' @close='close2'></new-recruitment>
     <batch-input batchType='RecruitmentInfo' v-show="isBatchControl" @close='close' class="newApplicant"></batch-input>
@@ -569,15 +585,20 @@ import * as request from "@/network/request"
 import SelectProjectInfo from '@/components/recruitmentCompoment/SelectProjectInfo.vue';
 import Html5Editor from '@/components/Html5Editor.vue';
 import NewRecruitment from '@/components/recruitmentCompoment/NewRecruitment.vue';
+import Chart from '@/components/Chart.vue';
 import moment from 'moment';
 export default {
-  components: { BatchInput, BatchOutput, SelectProjectInfo, Html5Editor, NewRecruitment },
+  components: { BatchInput, BatchOutput, SelectProjectInfo, Html5Editor, NewRecruitment, Chart },
   props: {
     BatchNum: {
       type: Number
     },
     newSwitch: {
       type: Number
+    },
+    visible: {
+      type: Boolean,
+      default: false
     },
   },
   data() {
@@ -605,7 +626,259 @@ export default {
       jobList: ['C开发', 'C++开发', 'JAVA开发', 'PYTHON开发', 'WEB开发', '自动化测试', '芯片验证', '手动测试', '软件开发测试', '硬件开发', '硬件测试', '硬件维护', '资料开发', 'BA', '资料', '标注', '大数据', '运维', 'C#开发', '图像PQ', 'CAD开发', 'IC验证', '结构工程师', '其他'],
       urgencyList: ['高', '中', '低', '暂停'],
       typeList: ['SLA', '离职补缺', '新需求'],
-      ompList: ['软件开发工程', '硬件开发工程师', '测试工程师', '资料开发工程师']
+      ompList: ['软件开发工程', '硬件开发工程师', '测试工程师', '资料开发工程师', '项目经理', '质量工程师', 'UCD设计工程师', '版图开发工程师', '维护工程师', '实验室管理工程师', '研发支撑类工程师'],
+      titleData: ['需求总数', '月度满足数', '需求满足度'],
+      date1: '',
+      date2: '',
+      date3: '',
+			xDataA: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+        },
+        // formatter:function(val){
+        //     return val.split("").join("\n");
+        // }
+        axisLabel: {
+        rotate: 50, //文字旋转
+        },
+
+			},
+			xDataB: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				},
+        axisLabel: {
+        rotate: 50, //文字旋转
+        },
+			},
+			xDataC: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				},
+        // axisLabel: {
+        // rotate: 50, //文字旋转
+        // },
+			},
+			xDataD: {
+				type: 'category',
+				data: [],
+				axisPointer: {
+					type: 'shadow'
+				},
+        // axisLabel: {
+        // rotate: 50, //文字旋转
+        // },
+			},
+			yData1A: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 3,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2A: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 150,
+				interval: 15,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			yData1B: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 3,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2B: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 150,
+				interval: 15,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			yData1C: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 3,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2C: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 150,
+				interval: 15,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			yData1D: {
+				type: 'value',
+				name: '人数',
+				min: 0,
+				max: 50,
+				interval: 3,
+				axisLabel: {
+					formatter: '{value} '
+				}
+			},
+			yData2D: {
+				type: 'value',
+				name: '满足度',
+				min: 0,
+				max: 150,
+				interval: 15,
+				axisLabel: {
+					formatter: '{value} %'
+				}
+			},
+			series1A: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2A: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+        data: [],
+			},
+			series3A: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			},
+			series1B: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2B: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3B: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			},
+			series1C: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2C: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3C: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+			},
+			series1D: {
+				name: '需求总数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series2D: {
+				name: '月度满足数',
+				type: 'bar',
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + '人';
+					}
+				},
+				data: []
+			},
+			series3D: {
+				name: '需求满足度',
+				type: 'line',
+				yAxisIndex: 1,
+				tooltip: {
+					valueFormatter: function (value) {
+						return value + ' %';
+					}
+				},
+				data: []
+      },
     };
   },
   methods: {
@@ -616,6 +889,12 @@ export default {
         target[column] = value;
         this.data = newData;
       }
+    },
+    onClose() {
+      this.$emit('visibleClose')
+    },
+    afterVisibleChange(val) {
+      console.log('visible', val);
     },
     edit(key) {
       const newData = [...this.data];
