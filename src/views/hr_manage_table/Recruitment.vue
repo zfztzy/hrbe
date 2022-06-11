@@ -15,6 +15,7 @@
       <chart title="上海海思PDU需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
       <chart title="海思半导体地域需求" keyId="chart3" :series="[series1C, series2C, series3C]" :xAxis="[xDataC]" :yAxis="[yData1C, yData2C]" :titleData="titleData"/>
       <chart title="上海海思地域需求" keyId="chart4" :series="[series1D, series2D, series3D]" :xAxis="[xDataD]" :yAxis="[yData1D, yData2D]" :titleData="titleData"/>
+      <chart title="岗位类型需求" keyId="chart4" :series="[series1D, series2D, series3D]" :xAxis="[xDataD]" :yAxis="[yData1D, yData2D]" :titleData="titleData"/>
     </el-scrollbar>
     </a-drawer>
     <html-5-editor @confirm='updateRequirements' :editType="editing" :model="model" v-show="isHtml5Editor" @close='close' class="newApplicant"></html-5-editor>
@@ -22,7 +23,7 @@
     <batch-input batchType='RecruitmentInfo' v-show="isBatchControl" @close='close' class="newApplicant"></batch-input>
     <batch-output batchType='RecruitmentInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
     <select-project-info v-if="recruitmentModel!=''" :model='recruitmentModel' :isSelectRelatedId='isSelectRelatedId' @close='close' @confirm='relatedConfirm'></select-project-info>
-    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 8 }"  :scroll="{ x: 1500, y: 550 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
@@ -686,13 +687,13 @@ export default {
 				}
 			},
 			yData2A: {
-				type: 'value',
-				name: '满足度',
+				type: '',
+				name: '',
 				min: 0,
-				max: 150,
-				interval: 15,
+				max: 0,
+				interval: 0,
 				axisLabel: {
-					formatter: '{value} %'
+					formatter: '{value}'
 				}
 			},
 			yData1B: {
@@ -706,13 +707,13 @@ export default {
 				}
 			},
 			yData2B: {
-				type: 'value',
-				name: '满足度',
+				type: '',
+				name: '',
 				min: 0,
-				max: 150,
-				interval: 15,
+				max: 0,
+				interval: 0,
 				axisLabel: {
-					formatter: '{value} %'
+					formatter: '{value}'
 				}
 			},
 			yData1C: {
@@ -726,13 +727,13 @@ export default {
 				}
 			},
 			yData2C: {
-				type: 'value',
-				name: '满足度',
+				type: '',
+				name: '',
 				min: 0,
-				max: 150,
-				interval: 15,
+				max: 0,
+				interval: 0,
 				axisLabel: {
-					formatter: '{value} %'
+					formatter: '{value}'
 				}
 			},
 			yData1D: {
@@ -746,13 +747,13 @@ export default {
 				}
 			},
 			yData2D: {
-				type: 'value',
-				name: '满足度',
+				type: '',
+				name: '',
 				min: 0,
-				max: 150,
-				interval: 15,
+				max: 0,
+				interval: 0,
 				axisLabel: {
-					formatter: '{value} %'
+					formatter: '{value}'
 				}
 			},
 			series1A: {

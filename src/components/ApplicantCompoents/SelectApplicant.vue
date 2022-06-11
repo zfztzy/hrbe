@@ -194,7 +194,7 @@ export default {
     this.model = deepCopy(this.Applicant)
 		console.log(this.model);
 		this.model.recommend_time = moment(this.Applicant.recommend_time).format('YYYY-MM-DD')
-		this.model.graduation = moment(this.Applicant.graduation).format('YYYY-MM-DD') 
+		// this.model.graduation = moment(this.Applicant.graduation).format('YYYY-MM-DD') 
 		console.log(this.model);
 	},
 	watch: {
@@ -205,7 +205,7 @@ export default {
 				this.model = deepCopy(this.Applicant)
 				console.log(this.model);
 				this.model.recommend_time = moment(this.Applicant.recommend_time).format('YYYY-MM-DD')
-				this.model.graduation = moment(this.Applicant.graduation).format('YYYY-MM-DD') 
+				// this.model.graduation = moment(this.Applicant.graduation).format('YYYY-MM-DD') 
 				console.log(this.model);
 			}
 		}

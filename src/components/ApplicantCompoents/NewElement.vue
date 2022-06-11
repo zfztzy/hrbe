@@ -38,7 +38,12 @@
             <a-icon type="tag" style="color: rgba(0,0,0,.25)"/>
           </a-tooltip>
         </a-input>
-        <a-date-picker placeholder="毕业时间" style="margin:20px; width: 400px" v-model="graduation"/>
+        <!-- <a-date-picker placeholder="毕业时间" style="margin:20px; width: 400px" v-model="graduation"/> -->
+        <a-input v-model="graduation" placeholder="毕业时间" style="margin:20px; width: 400px">
+          <a-tooltip slot="suffix" title="毕业时间">
+            <a-icon type="solution" style="color: rgba(0,0,0,.25)"/>
+          </a-tooltip>
+        </a-input>
         <a-input v-model="working_seniority" placeholder="工作年限" style="margin:20px; width: 400px">
           <a-tooltip slot="suffix" title="工作年限">
             <a-icon type="solution" style="color: rgba(0,0,0,.25)"/>

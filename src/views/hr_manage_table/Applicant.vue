@@ -91,7 +91,7 @@
               show-time
               v-else-if="col=='recommend_time'" 
               placeholder="推送时间"
-              style="margin: -5px 0"
+              style="margin: -5px 0;"
               @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"
               @ok="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
             <a-date-picker
@@ -113,16 +113,16 @@
               placeholder="能够到岗时间"
               style="margin: -5px 0"
               @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/> -->
-            <a-date-picker 
+            <!-- <a-date-picker 
               v-else-if="col=='entrance'" 
               placeholder="入学日期"
               style="margin: -5px 0"
-              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
-            <a-date-picker 
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/> -->
+            <!-- <a-date-picker 
               v-else-if="col=='graduation'" 
               placeholder="毕业日期"
               style="margin: -5px 0"
-              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/>
+              @change="dateString => handleChange(dateString.format('YYYY-MM-DD'), record.key, col)"/> -->
             <a-date-picker 
               v-else-if="col=='final_time'" 
               placeholder="入项时间"
@@ -186,7 +186,7 @@
               <template v-if="col=='machine_test_time'||col=='hw_interview_time1'||col=='recommend_time'||col=='hw_interview_time2'||col=='own_interview_time'">
                 {{ text | date}}
               </template>
-              <template v-else-if="col=='giveup_time'||col=='final_time'||col=='graduation'||col=='entrance'">
+              <template v-else-if="col=='giveup_time'||col=='final_time'">
                 {{ text | date}}
               </template><template v-else-if="col=='process_status'">
                 {{ text }}
@@ -222,7 +222,7 @@ const columns = [
   {
     title: '推送时间',
     dataIndex: 'recommend_time',
-    width: 150,
+    width: 220,
     fixed: 'left',
     scopedSlots: { customRender: 'recommend_time' },
   },
@@ -424,7 +424,29 @@ const columns = [
     title: '推荐PDU',
     dataIndex: 'pdu',
     width: 130,
-    scopedSlots: { customRender: 'pdu' },
+    scopedSlots: {
+      filterDropdown: 'filterDropdown',
+      filterIcon: 'filterIcon', 
+      customRender: 'pdu' 
+    },
+    onFilter: (value, record) =>
+      record.pdu
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => {
+          this.searchInput.focus();
+        }, 0);
+      }
+    },
+  },
+  {
+    title: '项目名称',
+    dataIndex: 'project_name',
+    width: 250,
+    scopedSlots: { customRender: 'project_name' },
   },
   {
     title: '软通面试结果及评语',
@@ -508,36 +530,30 @@ const columns = [
       }
     },
   },
-  {
-    title: '项目名称',
-    dataIndex: 'project_name',
-    width: 250,
-    scopedSlots: { customRender: 'project_name' },
-  },
-  {
-    title: '软通面试人',
-    dataIndex: 'own_interviewer',
-    width: 120,
-    scopedSlots: { customRender: 'own_interviewer' },
-  },
-  {
-    title: '软通面试时间',
-    dataIndex: 'own_interview_time',
-    width: 240,
-    scopedSlots: { customRender: 'own_interview_time' },
-  },
-  {
-    title: '软通机试类型',
-    dataIndex: 'machine_test_type',
-    width: 100,
-    scopedSlots: { customRender: 'machine_test_type' },
-  },
-  {
-    title: '机试成绩',
-    dataIndex: 'machine_test_score',
-    width: 100,
-    scopedSlots: { customRender: 'machine_test_score' },
-  },
+  // {
+  //   title: '软通面试人',
+  //   dataIndex: 'own_interviewer',
+  //   width: 120,
+  //   scopedSlots: { customRender: 'own_interviewer' },
+  // },
+  // {
+  //   title: '软通面试时间',
+  //   dataIndex: 'own_interview_time',
+  //   width: 240,
+  //   scopedSlots: { customRender: 'own_interview_time' },
+  // },
+  // {
+  //   title: '软通机试类型',
+  //   dataIndex: 'machine_test_type',
+  //   width: 100,
+  //   scopedSlots: { customRender: 'machine_test_type' },
+  // },
+  // {
+  //   title: '机试成绩',
+  //   dataIndex: 'machine_test_score',
+  //   width: 100,
+  //   scopedSlots: { customRender: 'machine_test_score' },
+  // },
   {
     title: '机试时间',
     dataIndex: 'machine_test_time',
@@ -568,12 +584,12 @@ const columns = [
     width: 240,
     scopedSlots: { customRender: 'hw_interview_time2' },
   },
-  {
-    title: '入项结果',
-    dataIndex: 'final_result',
-    width: 150,
-    scopedSlots: { customRender: 'final_result' },
-  },
+  // {
+  //   title: '入项结果',
+  //   dataIndex: 'final_result',
+  //   width: 150,
+  //   scopedSlots: { customRender: 'final_result' },
+  // },
   {
     title: '流程状态',
     dataIndex: 'resume_status',
@@ -769,7 +785,8 @@ export default {
       method: 'post',
       data: {
         filterData: this.filterData,
-        filterRegion: this.$cookies.get("region")
+        filterRegion: this.$cookies.get("region"),
+        filterNickname:this.$cookies.get("nickname")
       }
       }).then(res =>{
         let a = res.data.applicantList
