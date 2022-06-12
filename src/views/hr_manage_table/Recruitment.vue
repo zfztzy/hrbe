@@ -11,11 +11,8 @@
       width='900px'
     >
     <el-scrollbar style="height:100%">
-      <chart title="海思半导体PDU需求" keyId="chart1" :series="[series1A, series2A, series3A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
-      <chart title="上海海思PDU需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
-      <chart title="海思半导体地域需求" keyId="chart3" :series="[series1C, series2C, series3C]" :xAxis="[xDataC]" :yAxis="[yData1C, yData2C]" :titleData="titleData"/>
-      <chart title="上海海思地域需求" keyId="chart4" :series="[series1D, series2D, series3D]" :xAxis="[xDataD]" :yAxis="[yData1D, yData2D]" :titleData="titleData"/>
-      <chart title="岗位类型需求" keyId="chart4" :series="[series1D, series2D, series3D]" :xAxis="[xDataD]" :yAxis="[yData1D, yData2D]" :titleData="titleData"/>
+      <chart title="PDU需求" keyId="chart1" :series="[series1A, series2A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
+      <chart title="职位需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
     </el-scrollbar>
     </a-drawer>
     <html-5-editor @confirm='updateRequirements' :editType="editing" :model="model" v-show="isHtml5Editor" @close='close' class="newApplicant"></html-5-editor>
@@ -628,7 +625,7 @@ export default {
       urgencyList: ['高', '中', '低', '暂停'],
       typeList: ['SLA', '离职补缺', '新需求'],
       ompList: ['软件开发工程', '硬件开发工程师', '测试工程师', '资料开发工程师', '项目经理', '质量工程师', 'UCD设计工程师', '版图开发工程师', '维护工程师', '实验室管理工程师', '研发支撑类工程师'],
-      titleData: ['需求总数', '月度满足数', '需求满足度'],
+      titleData: ['Sum', 'Sla'],
       date1: '',
       date2: '',
       date3: '',
@@ -757,7 +754,7 @@ export default {
 				}
 			},
 			series1A: {
-				name: '需求总数',
+				name: 'Sum',
 				type: 'bar',
 				tooltip: {
 					valueFormatter: function (value) {
@@ -767,7 +764,7 @@ export default {
 				data: []
 			},
 			series2A: {
-				name: '月度满足数',
+				name: 'Sla',
 				type: 'bar',
 				tooltip: {
 					valueFormatter: function (value) {
@@ -1090,11 +1087,48 @@ export default {
         }
       }
       this.updateRecruitmentInfo(key)
-    }
+    },
+    getPicValue() {
+      request.request({
+      url: this.getBaseUrl() + 'get_recruitmentInfo_pic/',
+      method: 'post',
+      data: {
+        filterRegion: this.$cookies.get("region"),
+        picType: 'pdu'
+      }
+      }).then(res =>{
+        console.log(res.data.picData);
+        this.xDataA.data = res.data.picData['xData']
+        this.series1A.data = res.data.picData['SumList']
+        this.series2A.data = res.data.picData['slaList']
+        this.yData1A.max = Math.max(...res.data.picData['SumList'])
+        this.yData1A.interval = parseInt(Math.max(...res.data.picData['SumList'])/10)
+      }).catch(err =>{
+        console.log(err);
+      })
+      request.request({
+      url: this.getBaseUrl() + 'get_recruitmentInfo_pic/',
+      method: 'post',
+      data: {
+        filterRegion: this.$cookies.get("region"),
+        picType: 'job'
+      }
+      }).then(res =>{
+        console.log(res.data.picData);
+        this.xDataB.data = res.data.picData['xData']
+        this.series1B.data = res.data.picData['SumList']
+        this.series2B.data = res.data.picData['slaList']
+        this.yData1B.max = Math.max(...res.data.picData['SumList'])
+        this.yData1B.interval = parseInt(Math.max(...res.data.picData['SumList'])/10)
+      }).catch(err =>{
+        console.log(err);
+      })
+    },
   },
   created () {
     this.getRecruitmentInfo()
     this.baseUrl = this.getBaseUrl()
+    this.getPicValue()
   },
   watch: {
     BatchNum: {
