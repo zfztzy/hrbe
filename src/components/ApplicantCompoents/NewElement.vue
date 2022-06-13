@@ -134,7 +134,7 @@ export default {
             sex: this.sex,
             education: this.education,
             recommend_time: this.recommend_time.format('YYYY-MM-DD'),
-            graduation: this.graduation.format('YYYY-MM-DD'),
+            graduation: this.graduation,
             graduated_from: this.graduated_from,
             major: this.major,
             phone_num: this.phone_num,
@@ -171,7 +171,7 @@ export default {
     },
     onChange(date, dateString) {
       console.log(date, dateString)
-      console.log(this.graduation.format('YYYY-MM-DD'))
+      console.log(this.graduation)
     },
   }
 }

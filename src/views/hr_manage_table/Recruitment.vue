@@ -12,6 +12,7 @@
     >
     <el-scrollbar style="height:100%">
       <chart title="PDU需求" keyId="chart1" :series="[series1A, series2A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
+      <br>
       <chart title="职位需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
     </el-scrollbar>
     </a-drawer>
