@@ -11,7 +11,7 @@
       width='900px'
     >
     <el-scrollbar style="height:100%">
-      <chart title="PDU需求" keyId="chart1" :series="[series1A, series2A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
+      <chart :title="title111" keyId="chart1" :series="[series1A, series2A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
       <br>
       <chart title="职位需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
     </el-scrollbar>
@@ -603,6 +603,11 @@ export default {
   data() {
     this.cacheData = data.map(item => ({ ...item }));
     return {
+      title111: "",
+      pduSum1: 0,
+      pduSum2: 0,
+      pduSla1: 0,
+      pduSla2: 0,
       data,
       columns,
       editingKey: '',
@@ -1104,6 +1109,11 @@ export default {
         this.series2A.data = res.data.picData['slaList']
         this.yData1A.max = Math.max(...res.data.picData['SumList'])
         this.yData1A.interval = parseInt(Math.max(...res.data.picData['SumList'])/10)
+        this.pduSum1 = res.data.picData['Sub1Sum']
+        this.pduSum2 = res.data.picData['Sub2Sum']
+        this.pduSla1 = res.data.picData['Sub1Sla']
+        this.pduSla2 = res.data.picData['Sub2Sla']
+        this.title111 = 'PDU需求：海思半导体剩余需求' + this.pduSum1 + '个，剩余SLA' + this.pduSla1 +'个、上海海思剩余需求' + this.pduSum2 + '个，剩余SLA' + this.pduSla2 + '个'
       }).catch(err =>{
         console.log(err);
       })
@@ -1130,6 +1140,7 @@ export default {
     this.getRecruitmentInfo()
     this.baseUrl = this.getBaseUrl()
     this.getPicValue()
+    this.title111 = 'PDU需求：上海海思剩余需求' + this.pduSum1 + '个，剩余SLA' + this.pduSla1 +'个、海思半导体剩余需求' + this.pduSum2 + '个，剩余SLA' + this.pduSla2 + '个'
   },
   watch: {
     BatchNum: {
