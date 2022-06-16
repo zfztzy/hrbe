@@ -10,10 +10,11 @@
       @close="onClose"
       width='900px'
     >
-    <el-scrollbar style="height:100%">
-      <chart :title="title111" keyId="chart1" :series="[series1A, series2A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
+    <a-spin size="large" class="recruitmentPicLoading" v-if="!pic1Ok && !pic2Ok" />
+    <el-scrollbar v-if="pduSum1!=0" style="height:100%">
+      <chart v-if="pic1Ok" :title="title111" keyId="chart1" :series="[series1A, series2A]" :xAxis="[xDataA]" :yAxis="[yData1A, yData2A]" :titleData="titleData"/>
       <br>
-      <chart title="职位需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
+      <chart v-if="pic2Ok" title="职位需求" keyId="chart2" :series="[series1B, series2B, series3B]" :xAxis="[xDataB]" :yAxis="[yData1B, yData2B]" :titleData="titleData"/>
     </el-scrollbar>
     </a-drawer>
     <html-5-editor @confirm='updateRequirements' :editType="editing" :model="model" v-show="isHtml5Editor" @close='close' class="newApplicant"></html-5-editor>
@@ -647,7 +648,6 @@ export default {
         axisLabel: {
         rotate: 50, //文字旋转
         },
-
 			},
 			xDataB: {
 				type: 'category',
@@ -883,6 +883,8 @@ export default {
 				},
 				data: []
       },
+      pic1Ok: false,
+      pic2Ok: false
     };
   },
   methods: {
@@ -1018,6 +1020,8 @@ export default {
       method: 'post',
       data: {data: this.data[0]}
       }).then(res =>{
+        this.getRecruitmentInfo()
+        this.isNewing = false
         console.log(res);
       }).catch(err =>{
         console.log(err);
@@ -1037,6 +1041,7 @@ export default {
         for (let i = 0; i < a.length; i++) {
           this.data.push(a[i]);
         }
+        this.cacheData.length = 0
         this.cacheData = data.map(item => ({ ...item }));
       }).catch(err =>{
         console.log(err);
@@ -1114,6 +1119,7 @@ export default {
         this.pduSla1 = res.data.picData['Sub1Sla']
         this.pduSla2 = res.data.picData['Sub2Sla']
         this.title111 = 'PDU需求：海思半导体剩余需求' + this.pduSum1 + '个，剩余SLA' + this.pduSla1 +'个、上海海思剩余需求' + this.pduSum2 + '个，剩余SLA' + this.pduSla2 + '个'
+        this.pic1Ok = true
       }).catch(err =>{
         console.log(err);
       })
@@ -1131,6 +1137,7 @@ export default {
         this.series2B.data = res.data.picData['slaList']
         this.yData1B.max = Math.max(...res.data.picData['SumList'])
         this.yData1B.interval = parseInt(Math.max(...res.data.picData['SumList'])/10)
+        this.pic2Ok = true
       }).catch(err =>{
         console.log(err);
       })
@@ -1168,6 +1175,8 @@ export default {
         let num = this.data[0].key
         this.data.unshift({
           key: num += 1,
+          num: 0,
+          arrival_num: 0
         });
         this.cacheData = this.data.map(item => ({ ...item }));
         const newData = [...this.data];
@@ -1222,5 +1231,10 @@ export default {
   background:rgba(0, 0, 0, 0.4);
   filter:alpha(opacity=60);  /*设置透明度为60%*/
   opacity:0.6;  /*非IE浏览器下设置透明度为60%*/
+}
+
+
+.recruitmentPicLoading {
+  margin: 50%;
 }
 </style>
