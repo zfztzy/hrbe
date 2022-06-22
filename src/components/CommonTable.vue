@@ -81,7 +81,6 @@ export default {
       }
     },
     save(key) {
-      
       const newData = [...this.data];
       const newCacheData = [...this.cacheData];
       const target = newData.find(item => key === item.key);

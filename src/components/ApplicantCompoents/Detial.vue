@@ -1,0 +1,110 @@
+<template>
+  <div>
+    <a-button type="primary" @click="showModal">
+      候选人详情
+    </a-button>
+    <a-modal v-model="visible" title="候选人详情" @ok="handleOk">
+			<el-scrollbar style="height:300px">
+				<a-descriptions title="">
+					<template v-for="(value,col) in Applicant">
+						<a-descriptions-item v-if="col=='machine_test_time'||col=='hw_interview_time1'||col=='recommend_time'||col=='hw_interview_time2'||col=='own_interview_time'||col=='giveup_time'||col=='final_time'" :key="col" :label="ApplicantJson[col]">
+							{{value | date}}
+						</a-descriptions-item>
+						<a-descriptions-item v-else :key="col" :label="ApplicantJson[col]">
+							{{value}}
+						</a-descriptions-item>
+					</template>
+				</a-descriptions>
+			</el-scrollbar>
+    </a-modal>
+  </div>
+</template>
+<script>
+import moment from 'moment';
+export default {
+	props:{
+		Applicant: {
+			type: Object
+		}
+	},
+  data() {
+    return {
+      visible: false,
+			ApplicantJson: {
+				"key": "序号",
+				"recommend_time": "推荐时间",
+				"recommender": "招聘顾问",
+				"name": "候选人姓名",
+				"phone_num": "联系电话",
+				"sex": "性别",
+				"education": "学历",
+				"graduated_from": "学校",
+				"major": "专业",
+				"graduation": "毕业时间",
+				"working_seniority": "工作年限",
+				"job": "技术方向",
+				"onjob": "在/离职状态",
+				"interviews": "期望面试时间及方式",
+				"region": "意向地",
+				"reason1": "HR沟通记录",
+				"pdu": "PDU",
+				"own_interview_results": "软通面试结果及评语",
+				"suggest_level": "建议职级",
+				"hw_interview_results1": "华为复核结果",
+				"hw_interview_results2": "华为终面复核结果",
+				"reason2": "简历进度",
+				"process_status": "简历最后状况",
+				"arrival_time": "待入职时间",
+				"offersuggest": "接受offer薪资/给到的offer薪资",
+				"reason4": "拒绝offer原因",
+				"entrance": "入学日期",
+				"related": "关联需求",
+				"project_name": "项目名",
+				"own_interviewer": "软通面试人",
+				"own_interview_time": "软通面试时间",
+				"machine_test_type": "软通机试类型",
+				"machine_test_score": "机试成绩",
+				"machine_test_time": "机试时间",
+				"hw_interviewer1": "华为技面人",
+				"hw_interview_time1": "华为技面时间",
+				"hw_interviewer2": "华为综面人",
+				"hw_interview_time2": "华为综面时间",
+				"final_result": "入项结果",
+				"final_time": "入项时间",
+				"giveup_time": "放弃offer时间",
+				"reason3": "",
+				"resume_status": "简历状态"
+			}
+    };
+  },
+  methods: {
+    showModal() {
+      this.visible = true;
+    },
+    handleOk(e) {
+      console.log(e);
+      this.visible = false;
+    },
+  },
+  filters: {
+    datetime(text) {
+      if (text) {
+      return moment(text).format('YYYY-MM-DD HH:MM:ss') 
+      } else {
+        return text
+      }
+    },
+    date(text) {
+      if (text) {
+        return moment(text).format('YYYY-MM-DD') 
+      } else {
+        return text
+      }
+    },
+    phone(text) {
+      console.log(text)
+      return text + ' '
+    }
+  }
+};
+</script>

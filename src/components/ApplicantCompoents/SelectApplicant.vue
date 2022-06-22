@@ -4,6 +4,7 @@
 			<a-table :columns="columns" :data-source="[model]" :pagination="false" :rowKey="(record,index)=>{return index}" style="margin: 15px">
 				<a slot="name" slot-scope="text">{{ text }}</a>
 			</a-table>
+			<Detial class="detailButtom" :Applicant='Applicant'/>
       <a-button type="" style="position: absolute; right: 10%; bottom: 5%;" @click="handleCopy()">复制</a-button>
 			<a-button @click="close" class="cancelButtom">关闭</a-button>
 		</div>
@@ -12,6 +13,7 @@
 
 <script>
 import moment from 'moment';
+import Detial from '@/components/ApplicantCompoents/Detial.vue';
 function typeOf(obj) {
   const toString = Object.prototype.toString;
   const map = {
@@ -53,6 +55,9 @@ function deepCopy(data) {
 }
 
 export default {
+	components:{
+		Detial
+	},
 	props: {
 		isSelectApplicant: {
 			type: Boolean,
@@ -248,6 +253,12 @@ export default {
 .cancelButtom {
   position: absolute;
   right: 5%;
+  bottom: 5%;
+}
+
+.detailButtom {
+  position: absolute;
+  right: 15%;
   bottom: 5%;
 }
 </style>
