@@ -19,7 +19,7 @@
     </a-drawer>
     <batch-input batchType='ProjectStatusInfo' v-show="isBatchControl"  @close='close' class="newApplicant"></batch-input>
     <batch-output batchType='ProjectStatusInfo' :selectDate='selectDate' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
-    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 70 }"  :scroll="{ x: 1500, y: 500 }">
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 70 }"  :scroll="{ x: 1500, y: 400 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"

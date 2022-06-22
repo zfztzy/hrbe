@@ -6,7 +6,7 @@
     <new-element :isNewApplicant='isNewApplicant' @close='close2'></new-element>
     <select-applicant v-if="model!=''" :Applicant='model' :isSelectApplicant='isSelectApplicant' @close='close'></select-applicant>
     <select-recruitment v-if="recruitmentModel!=''" :model='recruitmentModel' :isSelectRelatedId='isSelectRelatedId' @close='close' @confirm='relatedConfirm'></select-recruitment>
-    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 550 }">
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 15 }"  :scroll="{ x: 1500, y: 400 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"

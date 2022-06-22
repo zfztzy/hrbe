@@ -22,7 +22,7 @@
     <batch-input batchType='RecruitmentInfo' v-show="isBatchControl" @close='close' class="newApplicant"></batch-input>
     <batch-output batchType='RecruitmentInfo' v-show="isBatchControl2"  @close='close' class="newApplicant"></batch-output>
     <select-project-info v-if="recruitmentModel!=''" :model='recruitmentModel' :isSelectRelatedId='isSelectRelatedId' @close='close' @confirm='relatedConfirm'></select-project-info>
-    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 8 }"  :scroll="{ x: 1500, y: 550 }">
+    <a-table :columns="columns" :data-source="data" bordered :pagination="{ pageSize: 8 }"  :scroll="{ x: 1500, y: 400 }">
       <div
         slot="filterDropdown"
         slot-scope="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
