@@ -86,14 +86,6 @@
 </template>
 <script>
 const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i,
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
 import * as request from "@/network/request"
 export default {
   props: {
@@ -177,6 +169,25 @@ export default {
       }).then(res =>{
         this.columns = res.data.columns;
         this.columns.forEach(element => {
+          try {
+            if (element.scopedSlots.filterIcon === 'filterIcon'){
+              element.onFilter = (value, record) =>
+                record[element.dataIndex]
+                  .toString()
+                  .toLowerCase()
+                  .includes(value.toLowerCase())
+              element.onFilterDropdownVisibleChange =  visible => {
+                if (visible) {
+                  setTimeout(() => {
+                    this.searchInput.focus();
+                  }, 0)
+                }
+              }
+              console.log(element);
+            }
+          } catch (error) {
+            console.log(error)
+          }
           this.colList.push(element.dataIndex)
         });
         console.log(this.colList);
@@ -258,6 +269,15 @@ export default {
   created () {
     this.getColumns()
     this.getData()
+  },
+  handleSearch(selectedKeys, confirm, dataIndex) {
+      confirm();
+      this.searchText = selectedKeys[0];
+      this.searchedColumn = dataIndex;
+    },
+  handleReset(clearFilters) {
+    clearFilters();
+    this.searchText = '';
   },
   watch: {
     newSwitch:{
